@@ -8,6 +8,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ArchiveController" customModule="QLArchives" customModuleProvider="target">
             <connections>
+                <outlet property="checkboxDirs" destination="zwk-4c-ktK" id="oH4-p8-6lF"/>
+                <outlet property="configBackground" destination="ov6-Pg-NQP" id="7Pf-ev-2Wt"/>
                 <outlet property="errorText" destination="TSv-oF-fr6" id="0o7-rE-eRx"/>
                 <outlet property="errorView" destination="xfI-j0-rMV" id="Rq9-AO-drn"/>
                 <outlet property="metaInfo" destination="Svc-Z2-wpl" id="X0m-FD-GPp"/>
@@ -22,6 +24,52 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ov6-Pg-NQP">
+                    <rect key="frame" x="0.0" y="338" width="310" height="22"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <subviews>
+                        <searchField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1">
+                            <rect key="frame" x="0.0" y="0.0" width="254" height="22"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" sendsSearchStringImmediately="YES" id="K2e-UB-ToX">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </searchFieldCell>
+                            <connections>
+                                <action selector="didSearch:" target="-2" id="iKb-U0-byH"/>
+                            </connections>
+                        </searchField>
+                        <button wantsLayer="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zwk-4c-ktK">
+                            <rect key="frame" x="260" y="2" width="50" height="18"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                            <contentFilters>
+                                <ciFilter name="CIColorControls">
+                                    <configuration>
+                                        <real key="inputBrightness" value="0.0"/>
+                                        <real key="inputContrast" value="1"/>
+                                        <null key="inputImage"/>
+                                        <real key="inputSaturation" value="0.0"/>
+                                    </configuration>
+                                </ciFilter>
+                            </contentFilters>
+                            <buttonCell key="cell" type="check" title="Dirs" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="lRW-pU-A7E">
+                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                                <string key="keyEquivalent">d</string>
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="checkboxToggleDirs:" target="-2" id="VQi-cg-yhA"/>
+                                <binding destination="U8L-Ag-Jlq" name="value" keyPath="values.hideDirs" id="60i-5g-Mdp">
+                                    <dictionary key="options">
+                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                    </dictionary>
+                                </binding>
+                            </connections>
+                        </button>
+                    </subviews>
+                </customView>
                 <textField clipsToBounds="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Svc-Z2-wpl">
                     <rect key="frame" x="390" y="341" width="84" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
@@ -31,18 +79,6 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <searchField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1">
-                    <rect key="frame" x="0.0" y="338" width="224" height="22"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" sendsSearchStringImmediately="YES" id="K2e-UB-ToX">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </searchFieldCell>
-                    <connections>
-                        <action selector="didSearch:" target="-2" id="iKb-U0-byH"/>
-                    </connections>
-                </searchField>
                 <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" findBarPosition="aboveHorizontalRuler" translatesAutoresizingMaskIntoConstraints="NO" id="I4L-hr-trd">
                     <rect key="frame" x="0.0" y="-2" width="480" height="340"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -163,6 +199,7 @@
             </subviews>
             <point key="canvasLocation" x="-158.5" y="123"/>
         </customView>
+        <userDefaultsController representsSharedInstance="YES" id="U8L-Ag-Jlq"/>
     </objects>
     <resources>
         <image name="NSCaution" width="32" height="32"/>

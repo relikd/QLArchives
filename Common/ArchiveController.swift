@@ -3,13 +3,15 @@ import Cocoa
 
 // TODO: collapsible nested folders
 // TODO: drag & drop extract
-// TODO: checkbox to hide folders
 
 class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewDataSource {
 	
 	@IBOutlet var outline: NSOutlineView!
 	@IBOutlet var metaInfo: NSTextField!
+	
+	@IBOutlet var configBackground: NSView!
 	@IBOutlet var searchField: NSSearchField!
+	@IBOutlet var checkboxDirs: NSButton!
 	
 	@IBOutlet var errorView: NSView!
 	@IBOutlet var errorText: NSTextField!
@@ -24,6 +26,8 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	
 	override func viewDidLoad() {
 		metaInfo.stringValue = ""
+		// otherwise search field will overlap checkbox after width <0
+		searchField.widthAnchor.constraint(greaterThanOrEqualToConstant: 40).isActive = true
 	}
 	
 	// Use these two to disable initial focus of search field
@@ -35,6 +39,22 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 //	override func viewDidAppear() {
 //		searchField.refusesFirstResponder = false
 //	}
+	
+	
+	// MARK: - Key-Value Observer
+	
+	private var kvo: NSKeyValueObservation?
+	
+	override func viewWillAppear() {
+		kvo = checkboxDirs.observe(\.state) { _, _ in
+			self.applyFilter()
+		}
+	}
+	
+	override func viewDidDisappear() {
+		kvo?.invalidate()
+	}
+	
 	
 	// MARK: - Load data
 	
@@ -71,7 +91,10 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		fitted.size.width = metaInfo.fittingSize.width
 		fitted.origin.x = metaInfo.frame.maxX - fitted.width // right-aligned on previous frame
 		metaInfo.frame = fitted
+		// use max-width for other elements
+		configBackground.frame.size.width = fitted.minX - 8
 	}
+	
 	
 	// MARK: - Outline View
 	
@@ -120,14 +143,10 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	}
 	
 	func applySort() {
-		if data.sort(with: outline.sortDescriptors) {
-			if filter == nil {
-				outline.reloadData()
-			} else {
-				search(searchField.stringValue)
-			}
-		}
+		data.sort(with: outline.sortDescriptors)
+		applyFilter()
 	}
+	
 	
 	// MARK: - Search
 	
@@ -137,20 +156,8 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		let debounce = sender.stringValue.isEmpty ? 0.02 : 0.2
 		searchTimer?.invalidate()
 		searchTimer = Timer.scheduledTimer(withTimeInterval: debounce, repeats: false) { [weak self] _ in
-			self?.search(sender.stringValue)
+			self?.applyFilter()
 		}
-	}
-	
-	func search(_ term: String) {
-		if term.isEmpty {
-			if filter == nil {
-				return // no need to reload
-			}
-			filter = nil
-		} else {
-			filter = data.filter({ $0.path.contains(term) })
-		}
-		outline.reloadData()
 	}
 	
 	// CMD + F to search
@@ -166,12 +173,30 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	override func cancelOperation(_ sender: Any?) {
 		self.view.window?.performSelector(onMainThread: #selector(NSWindow.makeFirstResponder(_:)), with: self.outline, waitUntilDone: false)
 	}
+	
+	
+	// MARK: - Filter
+	
+	@IBAction func checkboxToggleDirs(_ sender: NSButton) {
+		applyFilter()
+	}
+	
+	func applyFilter() {
+		switch (searchField.stringValue, checkboxDirs.state == .off) {
+		case ("", false): filter = nil
+		case ("", true): filter = data.filter { $0.filetype != .Directory }
+		case (let term, false): filter = data.filter { $0.path.contains(term) }
+		case (let term, true): filter = data.filter { $0.path.contains(term) && $0.filetype != .Directory }
+		}
+		outline.reloadData()
+	}
 }
 
 
 // MARK: - Sorting
 
 extension Array<ArchiveEntry> {
+	@discardableResult
 	mutating func sort(with sortDescriptors: [NSSortDescriptor]) -> Bool {
 		if #available(macOS 12.0, *) {
 			let comp = keyPathComperators(from: sortDescriptors)
