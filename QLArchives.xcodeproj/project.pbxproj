@@ -73,6 +73,7 @@
 		547BC84B2F7FC81B00A47955 /* libarchive.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libarchive.tbd; path = usr/lib/libarchive.tbd; sourceTree = SDKROOT; };
 		547BC8542F804C3500A47955 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		547BC85A2F8272EC00A47955 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		547F3D752F8527050053288C /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +100,7 @@
 		547BC7DA2F7FC23600A47955 = {
 			isa = PBXGroup;
 			children = (
+				547F3D752F8527050053288C /* CHANGELOG.md */,
 				547BC85A2F8272EC00A47955 /* README.md */,
 				547BC8072F7FC33200A47955 /* Config.xcconfig */,
 				547BC8082F7FC33200A47955 /* Config-debug.xcconfig */,
