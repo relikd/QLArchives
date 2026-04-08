@@ -20,6 +20,10 @@ A simple quicklook plugin for archive formats.
 - Customize sort order
 - Archive support for: `.7z`, `.apk`, `.cab`, `.cdr`, `.cpio`, `.deb`, `.epub`, `.ipsw`, `.iso`, `.jar`, `.lha`, `.pkg`, `.rar`, `.rpm`, `.tar`, `.tar.bz2`, `.tar.gz`, `.tar.lz`, `.tar.xz`, `.tbz`, `.tbz2`, `.tgz`, `.tlz`, `.txz`, `.war`, `.xar`, `.xip`, `.zip`, `.zipx`
 
+Within the companion app:
+- Search / filter files
+- Extract individual files from archive
+
 
 ## What it does
 
