@@ -51,8 +51,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5476ADE62F832C92000C309A /* archive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = archive.h; sourceTree = "<group>"; };
-		5476ADE72F832C92000C309A /* archive_entry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = archive_entry.h; sourceTree = "<group>"; };
 		547BC7E32F7FC23600A47955 /* QLArchives (debug).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "QLArchives (debug).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		547BC8072F7FC33200A47955 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		547BC8082F7FC33200A47955 /* Config-debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Config-debug.xcconfig"; sourceTree = "<group>"; };
@@ -74,6 +72,8 @@
 		547BC8542F804C3500A47955 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		547BC85A2F8272EC00A47955 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		547F3D752F8527050053288C /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		547F3D922F864E9E0053288C /* archive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = archive.h; sourceTree = "<group>"; };
+		547F3D932F864E9E0053288C /* archive_entry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = archive_entry.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,8 +157,8 @@
 			isa = PBXGroup;
 			children = (
 				547BC8402F7FC76200A47955 /* shim.h */,
-				5476ADE62F832C92000C309A /* archive.h */,
-				5476ADE72F832C92000C309A /* archive_entry.h */,
+				547F3D922F864E9E0053288C /* archive.h */,
+				547F3D932F864E9E0053288C /* archive_entry.h */,
 				547BC83F2F7FC76200A47955 /* LibArchive.swift */,
 			);
 			path = libarchive;
