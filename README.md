@@ -4,23 +4,30 @@
 
 <img src="resources/icon.svg" width="180" height="180">
 
-# QLArchives
 
-A simple quicklook plugin for archive formats.
+QLArchives
+==========
+
+QuickLook plugin for archive formats.
 
 ![screenshot](./resources/screenshot.png)
 
 
-## Installation
+Installation
+------------
+
+Requires macOS Catalina (10.15) or higher.
 
 ```sh
 brew install --cask relikd/tap/qlarchives
 xattr -d com.apple.quarantine /Applications/QLArchives.app
 ```
 
-or download manually via [release page](https://github.com/relikd/QLArchives/releases/latest).
+or download from [releases](https://github.com/relikd/QLArchives/releases/latest).
 
-## Features
+
+Features
+--------
 
 - Blazing fast archive listings (native UI)
 - No (external) dependencies
@@ -34,7 +41,8 @@ Within the companion app:
 - Extract individual files from archive
 
 
-## What it does
+What it does
+------------
 
 QLArchives uses [libarchive](https://github.com/libarchive/libarchive) to process most common archive formats.
 Notably, the app uses the libarchive library already bundled with macOS.
