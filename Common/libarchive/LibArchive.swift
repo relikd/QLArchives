@@ -58,7 +58,6 @@ class LibArchive: IteratorProtocol, Sequence {
 	func close() {
 		if ptr_archive != nil {
 			ptr_entry = nil
-			archive_read_close(ptr_archive)
 			archive_read_free(ptr_archive)
 			ptr_archive = nil
 		}

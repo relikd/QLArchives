@@ -2,7 +2,6 @@ import Foundation
 import Cocoa
 
 // TODO: collapsible nested folders
-// TODO: drag & drop extract
 
 class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewDataSource {
 	
