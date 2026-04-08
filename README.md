@@ -11,6 +11,15 @@ A simple quicklook plugin for archive formats.
 ![screenshot](./resources/screenshot.png)
 
 
+## Installation
+
+```sh
+brew install --cask relikd/tap/qlarchives
+xattr -d com.apple.quarantine /Applications/QLArchives.app
+```
+
+or download manually via [release page](https://github.com/relikd/QLArchives/releases/latest).
+
 ## Features
 
 - Blazing fast archive listings (native UI)
