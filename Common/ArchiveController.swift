@@ -5,12 +5,11 @@ import Cocoa
 
 class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewDataSource {
 	
-	@IBOutlet var outline: NSOutlineView!
+	@IBOutlet var cfgFilter: NSSegmentedControl!
+	@IBOutlet var searchField: NSSearchField!
 	@IBOutlet var metaInfo: NSTextField!
 	
-	@IBOutlet var configBackground: NSView!
-	@IBOutlet var searchField: NSSearchField!
-	@IBOutlet var checkboxDirs: NSButton!
+	@IBOutlet var outline: NSOutlineView!
 	
 	@IBOutlet var errorView: NSView!
 	@IBOutlet var errorText: NSTextField!
@@ -25,8 +24,6 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	
 	override func viewDidLoad() {
 		metaInfo.stringValue = ""
-		// otherwise search field will overlap checkbox after width <0
-		searchField.widthAnchor.constraint(greaterThanOrEqualToConstant: 40).isActive = true
 		outline.setDraggingSourceOperationMask(.copy, forLocal: false)
 	}
 	
@@ -43,17 +40,17 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	
 	// MARK: - Key-Value Observer
 	
-	private var kvo: NSKeyValueObservation?
-	
-	override func viewWillAppear() {
-		kvo = checkboxDirs.observe(\.state) { _, _ in
-			self.applyFilter()
-		}
-	}
-	
-	override func viewDidDisappear() {
-		kvo?.invalidate()
-	}
+//	private var kvo: NSKeyValueObservation?
+//	
+//	override func viewWillAppear() {
+//		kvo = checkboxDirs.observe(\.state) { _, _ in
+//			self.applyFilter()
+//		}
+//	}
+//	
+//	override func viewDidDisappear() {
+//		kvo?.invalidate()
+//	}
 	
 	
 	// MARK: - Load data
@@ -86,13 +83,6 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 			txt += " (\(percent)%)"
 		}
 		metaInfo.stringValue = "\(txt) — \(archive.count) items"
-		// fit min size
-		var fitted = metaInfo.frame
-		fitted.size.width = metaInfo.fittingSize.width
-		fitted.origin.x = metaInfo.frame.maxX - fitted.width // right-aligned on previous frame
-		metaInfo.frame = fitted
-		// use max-width for other elements
-		configBackground.frame.size.width = fitted.minX - 8
 	}
 	
 	
@@ -122,9 +112,9 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		case NSUserInterfaceItemIdentifier(rawValue: "icon"):
 			switch obj.filetype {
 			case .RegularFile:
-				cell.image = NSImage(named: NSImage.multipleDocumentsName)
+				cell.image = NSImage(named: "fileTemplate")
 			case .SymbolicLink:
-				cell.image = NSImage(named: NSImage.followLinkFreestandingTemplateName)
+				cell.image = NSImage(named: "linkTemplate")
 			case .Directory:
 				cell.image = NSImage(named: NSImage.folderName)
 			default:
@@ -177,18 +167,54 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	
 	// MARK: - Filter
 	
-	@IBAction func checkboxToggleDirs(_ sender: NSButton) {
+	@IBAction func toggleFilter(_ sender: NSSegmentedControl) {
 		applyFilter()
 	}
 	
 	func applyFilter() {
-		switch (searchField.stringValue, checkboxDirs.state == .off) {
-		case ("", false): filter = nil
-		case ("", true): filter = data.filter { $0.filetype != .Directory }
-		case (let term, false): filter = data.filter { $0.path.contains(term) }
-		case (let term, true): filter = data.filter { $0.path.contains(term) && $0.filetype != .Directory }
+		switch (searchField.stringValue, MultiSelectFilter(rawValue: cfgFilter.multiSelection).asFiletype()) {
+		case ("", nil): filter = nil
+		case ("", let filtr): filter = data.filter { filtr!.contains($0.filetype) }
+		case (let search, nil): filter = data.filter { $0.path.contains(search) }
+		case (let search, let filtr): filter = data.filter { $0.path.contains(search) && filtr!.contains($0.filetype) }
 		}
 		outline.reloadData()
+	}
+}
+
+struct MultiSelectFilter: OptionSet {
+	let rawValue: Int
+	
+	static let folder = Self(rawValue: 1)
+	static let file   = Self(rawValue: 2)
+	static let link   = Self(rawValue: 4)
+	
+	func asFiletype() ->  Set<Filetype>? {
+		// no need to filter if all types are selected
+		if rawValue == 7 {
+			return nil
+		}
+		var rv = Set<Filetype>()
+		if self.contains(.folder) { rv.formUnion(Filetype.dirs) }
+		if self.contains(.file) { rv.formUnion(Filetype.files) }
+		if self.contains(.link) { rv.formUnion(Filetype.links) }
+		return rv.isEmpty ? nil : rv // also no filter if none is selected
+	}
+}
+
+// All components must have tag > 0 + tags must be bitwise exclusive
+extension NSSegmentedControl {
+	var multiSelection: Int {
+		get {
+			(0..<self.segmentCount).reduce(0) {
+				$0 + (self.isSelected(forSegment: $1) ? self.tag(forSegment: $1) : 0)
+			}
+		}
+		set {
+			for i in 0..<self.segmentCount {
+				self.setSelected((self.tag(forSegment: i) & newValue) != 0, forSegment: i)
+			}
+		}
 	}
 }
 

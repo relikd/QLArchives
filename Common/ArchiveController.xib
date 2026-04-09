@@ -8,8 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ArchiveController" customModule="QLArchives" customModuleProvider="target">
             <connections>
-                <outlet property="checkboxDirs" destination="zwk-4c-ktK" id="oH4-p8-6lF"/>
-                <outlet property="configBackground" destination="ov6-Pg-NQP" id="7Pf-ev-2Wt"/>
+                <outlet property="cfgFilter" destination="qMM-TH-HUw" id="MN9-sd-N2k"/>
                 <outlet property="errorText" destination="TSv-oF-fr6" id="0o7-rE-eRx"/>
                 <outlet property="errorView" destination="xfI-j0-rMV" id="Rq9-AO-drn"/>
                 <outlet property="metaInfo" destination="Svc-Z2-wpl" id="X0m-FD-GPp"/>
@@ -24,14 +23,29 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ov6-Pg-NQP">
-                    <rect key="frame" x="0.0" y="338" width="310" height="22"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="7gY-e0-z00" userLabel="Header">
+                    <rect key="frame" x="0.0" y="328" width="480" height="32"/>
                     <subviews>
-                        <searchField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1">
-                            <rect key="frame" x="0.0" y="0.0" width="254" height="22"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" sendsSearchStringImmediately="YES" id="K2e-UB-ToX">
+                        <segmentedControl verticalHuggingPriority="750" mirrorLayoutDirectionWhenInternationalizing="never" translatesAutoresizingMaskIntoConstraints="NO" id="qMM-TH-HUw">
+                            <rect key="frame" x="8" y="5" width="80" height="23"/>
+                            <segmentedCell key="cell" alignment="left" style="smallSquare" trackingMode="selectAny" id="el0-2b-9q6">
+                                <font key="font" metaFont="system"/>
+                                <segments>
+                                    <segment toolTip="Show directories" image="dirTemplate" width="24" tag="1"/>
+                                    <segment toolTip="Show files" image="fileTemplate" width="24" tag="2"/>
+                                    <segment toolTip="Show symlinks" image="linkTemplate" width="24" tag="4"/>
+                                </segments>
+                            </segmentedCell>
+                            <connections>
+                                <action selector="toggleFilter:" target="-2" id="wyL-d9-c3b"/>
+                            </connections>
+                        </segmentedControl>
+                        <searchField focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1">
+                            <rect key="frame" x="96" y="5" width="315" height="22"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="BgJ-zN-Mx8"/>
+                            </constraints>
+                            <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" id="K2e-UB-ToX">
                                 <font key="font" metaFont="system"/>
                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -40,54 +54,34 @@
                                 <action selector="didSearch:" target="-2" id="iKb-U0-byH"/>
                             </connections>
                         </searchField>
-                        <button wantsLayer="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zwk-4c-ktK">
-                            <rect key="frame" x="260" y="2" width="50" height="18"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                            <contentFilters>
-                                <ciFilter name="CIColorControls">
-                                    <configuration>
-                                        <real key="inputBrightness" value="0.0"/>
-                                        <real key="inputContrast" value="1"/>
-                                        <null key="inputImage"/>
-                                        <real key="inputSaturation" value="0.0"/>
-                                    </configuration>
-                                </ciFilter>
-                            </contentFilters>
-                            <buttonCell key="cell" type="check" title="Dirs" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="lRW-pU-A7E">
-                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <textField clipsToBounds="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Svc-Z2-wpl">
+                            <rect key="frame" x="417" y="8" width="57" height="16"/>
+                            <textFieldCell key="cell" selectable="YES" title="42 items" usesSingleLineMode="YES" id="Uux-eV-JGS">
                                 <font key="font" metaFont="system"/>
-                                <string key="keyEquivalent">d</string>
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </buttonCell>
-                            <connections>
-                                <action selector="checkboxToggleDirs:" target="-2" id="VQi-cg-yhA"/>
-                                <binding destination="U8L-Ag-Jlq" name="value" keyPath="values.hideDirs" id="60i-5g-Mdp">
-                                    <dictionary key="options">
-                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                    </dictionary>
-                                </binding>
-                            </connections>
-                        </button>
+                                <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
                     </subviews>
+                    <constraints>
+                        <constraint firstItem="qMM-TH-HUw" firstAttribute="centerY" secondItem="7gY-e0-z00" secondAttribute="centerY" id="0jk-uc-J3Q"/>
+                        <constraint firstItem="Svc-Z2-wpl" firstAttribute="centerY" secondItem="7gY-e0-z00" secondAttribute="centerY" id="DJV-iS-0d1"/>
+                        <constraint firstItem="aQ2-Ve-Sd1" firstAttribute="leading" secondItem="qMM-TH-HUw" secondAttribute="trailing" constant="8" symbolic="YES" id="GSo-mn-8Va"/>
+                        <constraint firstAttribute="trailing" secondItem="Svc-Z2-wpl" secondAttribute="trailing" constant="8" id="P8h-DP-bAR"/>
+                        <constraint firstItem="Svc-Z2-wpl" firstAttribute="leading" secondItem="aQ2-Ve-Sd1" secondAttribute="trailing" constant="8" symbolic="YES" id="s8Y-ZU-sW0"/>
+                        <constraint firstAttribute="height" constant="32" id="t9t-dR-tWa"/>
+                        <constraint firstItem="qMM-TH-HUw" firstAttribute="leading" secondItem="7gY-e0-z00" secondAttribute="leading" constant="8" id="ueG-RP-Jja"/>
+                        <constraint firstItem="aQ2-Ve-Sd1" firstAttribute="centerY" secondItem="7gY-e0-z00" secondAttribute="centerY" id="xPe-VI-Keb"/>
+                    </constraints>
                 </customView>
-                <textField clipsToBounds="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Svc-Z2-wpl">
-                    <rect key="frame" x="390" y="341" width="84" height="16"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" selectable="YES" alignment="right" title="42 items" usesSingleLineMode="YES" id="Uux-eV-JGS">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" findBarPosition="aboveHorizontalRuler" translatesAutoresizingMaskIntoConstraints="NO" id="I4L-hr-trd">
-                    <rect key="frame" x="0.0" y="-2" width="480" height="340"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" findBarPosition="aboveHorizontalRuler" translatesAutoresizingMaskIntoConstraints="NO" id="I4L-hr-trd">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="328"/>
                     <clipView key="contentView" drawsBackground="NO" id="2qM-FY-fGW">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="340"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="328"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" tableStyle="fullWidth" alternatingRowBackgroundColors="YES" autosaveColumns="NO" autosaveName="colums" rowHeight="16" headerView="cuO-Hd-FLf" indentationPerLevel="13" indentationMarkerFollowsCell="NO" outlineTableColumn="dCz-gR-l2M" id="yTC-jh-ZQv">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="312"/>
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <size key="intercellSpacing" width="17" height="4"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -163,7 +157,7 @@
                         <nil key="backgroundColor"/>
                     </clipView>
                     <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="TP0-DL-HDg">
-                        <rect key="frame" x="1" y="323" width="478" height="16"/>
+                        <rect key="frame" x="0.0" y="249" width="0.0" height="16"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="sp0-e7-MiR">
@@ -176,6 +170,15 @@
                     </tableHeaderView>
                 </scrollView>
             </subviews>
+            <constraints>
+                <constraint firstItem="7gY-e0-z00" firstAttribute="top" secondItem="F40-zz-e3Q" secondAttribute="top" id="4Lb-8k-doa"/>
+                <constraint firstAttribute="trailing" secondItem="7gY-e0-z00" secondAttribute="trailing" id="EtB-VR-IN8"/>
+                <constraint firstItem="I4L-hr-trd" firstAttribute="top" secondItem="7gY-e0-z00" secondAttribute="bottom" id="FSn-rk-HW2"/>
+                <constraint firstItem="I4L-hr-trd" firstAttribute="leading" secondItem="F40-zz-e3Q" secondAttribute="leading" id="Vcx-SW-w9M"/>
+                <constraint firstItem="7gY-e0-z00" firstAttribute="leading" secondItem="F40-zz-e3Q" secondAttribute="leading" id="WcB-gS-JhI"/>
+                <constraint firstAttribute="bottom" secondItem="I4L-hr-trd" secondAttribute="bottom" id="oos-jZ-mIR"/>
+                <constraint firstAttribute="trailing" secondItem="I4L-hr-trd" secondAttribute="trailing" id="uer-ja-KDi"/>
+            </constraints>
             <point key="canvasLocation" x="51" y="-227"/>
         </view>
         <customView id="xfI-j0-rMV" userLabel="ErrorView">
@@ -199,9 +202,11 @@
             </subviews>
             <point key="canvasLocation" x="-158.5" y="123"/>
         </customView>
-        <userDefaultsController representsSharedInstance="YES" id="U8L-Ag-Jlq"/>
     </objects>
     <resources>
         <image name="NSCaution" width="32" height="32"/>
+        <image name="dirTemplate" width="16" height="16"/>
+        <image name="fileTemplate" width="30" height="30"/>
+        <image name="linkTemplate" width="30" height="30"/>
     </resources>
 </document>

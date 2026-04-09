@@ -191,4 +191,8 @@ enum Filetype: mode_t {
 	case BlockDevice     = 0o0060000
 	case Directory       = 0o0040000
 	case NamedPipe       = 0o0010000
+	
+	static let dirs: [Self] = [.Directory]
+	static let links: [Self] = [.SymbolicLink]
+	static let files: [Self] = [.RegularFile, .Socket, .CharacterDevice, .BlockDevice, .NamedPipe]
 }
