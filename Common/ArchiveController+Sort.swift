@@ -6,16 +6,16 @@ extension ArchiveController {
 	/// Called when user clicks on a column header.
 	func outlineView(_ outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
 		applySort()
+		reload()
 	}
 	
-	/// Triggered on: load, sort
+	/// Does __not__ reload data.
 	func applySort() {
-		data.sort(with: outline.sortDescriptors)
-		applyFilter()
+		rows.sort(with: outline.sortDescriptors)
 	}
 }
 
-extension Array<ArchiveEntry> {
+extension Array where Element == Row {
 	@discardableResult
 	mutating func sort(with sortDescriptors: [NSSortDescriptor]) -> Bool {
 		if #available(macOS 12.0, *) {
@@ -30,15 +30,15 @@ extension Array<ArchiveEntry> {
 	}
 	
 	@available(macOS 12.0, *)
-	private func keyPathComperators(from sortDescriptors: [NSSortDescriptor]) -> [KeyPathComparator<ArchiveEntry>] {
+	private func keyPathComperators(from sortDescriptors: [NSSortDescriptor]) -> [KeyPathComparator<Element>] {
 		sortDescriptors.map {
 			let order = $0.ascending ? SortOrder.forward : .reverse
 			return switch $0.key {
-			case "path": KeyPathComparator(\ArchiveEntry.path, order: order)
-			case "date": KeyPathComparator(\ArchiveEntry.modified, order: order)
-			case "size": KeyPathComparator(\ArchiveEntry.size, order: order)
-			case "flag": KeyPathComparator(\ArchiveEntry.perm.raw, order: order)
-			default: KeyPathComparator(\ArchiveEntry.index, order: .forward) // always ascending
+			case "path": KeyPathComparator(\.entry.path, order: order)
+			case "date": KeyPathComparator(\.entry.modified, order: order)
+			case "size": KeyPathComparator(\.entry.size, order: order)
+			case "flag": KeyPathComparator(\.entry.perm.raw, order: order)
+			default: KeyPathComparator(\.entry.index, order: .forward) // always ascending
 			}
 		}
 	}
@@ -48,7 +48,9 @@ extension Array<ArchiveEntry> {
 		if comperators.isEmpty {
 			return false
 		}
-		self.sort { lhs, rhs in
+		self.sort {
+			let lhs = $0.entry
+			let rhs = $1.entry
 			for (key, asc) in comperators {
 				switch key {
 				case "path":

@@ -15,8 +15,8 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	@IBOutlet var errorText: NSTextField!
 	
 	var fileURL: URL? = nil
-	var data: [ArchiveEntry] = []
-	var filter: [ArchiveEntry]? = nil
+	var rows: [Row] = []
+	var filteredRows: [Row]? = nil
 	
 	override var nibName: NSNib.Name? {
 		return NSNib.Name("ArchiveController")
@@ -29,16 +29,18 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	
 	@discardableResult func load(_ url: URL) -> Bool {
 		fileURL = nil
-		data = []
+		rows = []
 		do {
 			let archive = try LibArchive(url)
 			for entry in archive {
-				data.append(entry)
+				rows.append(Row(entry: entry))
 			}
 			fileURL = url
 			metaInfo.stringValue = archive.metaInfo()
-			outline.reloadData()
-			applySort() // apply previous sort & filter
+			applySort()
+			applyFilter()
+			applySearch()
+			reload()
 			return true
 		} catch {
 			self.view = errorView
@@ -47,17 +49,41 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		}
 	}
 	
+	/// Recompute `filteredRows` and reload outline view
+	func reload() {
+		switch (searchActive, filterActive) {
+		case (true, true): filteredRows = rows.filter { $0.matchSearch && $0.matchFilter }
+		case (true, _): filteredRows = rows.filter { $0.matchSearch }
+		case (_, true): filteredRows = rows.filter { $0.matchFilter }
+		case (_, _): filteredRows = nil
+		}
+		outline.reloadData()
+	}
+	
 	// MARK: - Outline View
 	
 	func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-		filter?.count ?? data.count
+		filteredRows?.count ?? rows.count
 	}
 	
 	func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-		filter?[index] ?? data[index]
+		filteredRows?[index] ?? rows[index]
 	}
 	
 	func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
 		false
+	}
+}
+
+
+// MARK: - Row Entry
+
+class Row {
+	let entry: ArchiveEntry
+	var matchSearch = false
+	var matchFilter = false
+	
+	init(entry: ArchiveEntry) {
+		self.entry = entry
 	}
 }

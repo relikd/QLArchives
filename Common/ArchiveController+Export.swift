@@ -5,7 +5,7 @@ import AppKit
 extension ArchiveController: NSFilePromiseProviderDelegate {
 	/// Called whenever user starts to drag some selected rows.
 	func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> (any NSPasteboardWriting)? {
-		if (item as? ArchiveEntry)?.filetype == .Directory {
+		if (item as? Row)?.entry.filetype == .Directory {
 			return nil
 		}
 		let provider = NSFilePromiseProvider(fileType: "public.data", delegate: self)

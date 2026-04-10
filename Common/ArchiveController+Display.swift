@@ -18,7 +18,7 @@ extension LibArchive {
 extension ArchiveController {
 	/// Cell display
 	func outlineView(_ outlineView: NSOutlineView, willDisplayCell cell: Any, for tableColumn: NSTableColumn?, item: Any) {
-		guard let cell = cell as? NSCell, let obj = item as? ArchiveEntry  else {
+		guard let cell = cell as? NSCell, let obj = (item as? Row)?.entry  else {
 			return
 		}
 		switch tableColumn?.identifier {

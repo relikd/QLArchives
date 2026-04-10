@@ -10,7 +10,19 @@ extension ArchiveController {
 		let debounce = sender.stringValue.isEmpty ? 0.02 : 0.2
 		debounceTimer?.invalidate()
 		debounceTimer = Timer.scheduledTimer(withTimeInterval: debounce, repeats: false) { [weak self] _ in
-			self?.applyFilter()
+			self?.applySearch()
+			self?.reload()
+		}
+	}
+	
+	/// `true` if search field has content
+	var searchActive: Bool { !searchField.stringValue.isEmpty }
+	
+	/// Does __not__ reload data.
+	func applySearch() {
+		if searchActive {
+			let term = searchField.stringValue
+			rows.forEach { $0.matchSearch = $0.entry.path.contains(term) }
 		}
 	}
 	

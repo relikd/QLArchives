@@ -6,17 +6,17 @@ extension ArchiveController {
 	/// Called when user clicks on any of the type toggles.
 	@IBAction func toggleFilter(_ sender: NSSegmentedControl) {
 		applyFilter()
+		reload()
 	}
 	
-	/// Triggered on: load, filter, search, sort
+	/// `true` if search field has content
+	var filterActive: Bool { cfgFilter.selectedTypeFilter.isOn }
+	
+	/// Does __not__ reload data.
 	func applyFilter() {
-		switch (searchField.stringValue, cfgFilter.selectedTypeFilter.asFiletype()) {
-		case ("", nil): filter = nil
-		case ("", let filtr): filter = data.filter { filtr!.contains($0.filetype) }
-		case (let search, nil): filter = data.filter { $0.path.contains(search) }
-		case (let search, let filtr): filter = data.filter { $0.path.contains(search) && filtr!.contains($0.filetype) }
+		if let filtr = cfgFilter.selectedTypeFilter.asFiletype() {
+			rows.forEach { $0.matchFilter = filtr.contains($0.entry.filetype) }
 		}
-		outline.reloadData()
 	}
 }
 
@@ -27,16 +27,19 @@ struct TypeFilter: OptionSet {
 	static let file   = Self(rawValue: 2)
 	static let link   = Self(rawValue: 4)
 	
+	// no need to filter if none or all types are selected
+	var isOn: Bool { rawValue > 0 && rawValue < 7 }
+	
+	/// Convert `TypeFilter` to archive specific `Filetype`
 	func asFiletype() ->  Set<Filetype>? {
-		// no need to filter if all types are selected
-		if rawValue == 7 {
+		guard isOn else {
 			return nil
 		}
 		var rv = Set<Filetype>()
-		if self.contains(.folder) { rv.formUnion(Filetype.dirs) }
-		if self.contains(.file) { rv.formUnion(Filetype.files) }
-		if self.contains(.link) { rv.formUnion(Filetype.links) }
-		return rv.isEmpty ? nil : rv // also no filter if none is selected
+		if contains(.folder) { rv.formUnion(Filetype.dirs) }
+		if contains(.file) { rv.formUnion(Filetype.files) }
+		if contains(.link) { rv.formUnion(Filetype.links) }
+		return rv
 	}
 }
 
