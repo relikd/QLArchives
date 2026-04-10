@@ -14,9 +14,9 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	@IBOutlet var errorView: NSView!
 	@IBOutlet var errorText: NSTextField!
 	
-	private var fileURL: URL? = nil
-	private var data: [ArchiveEntry] = []
-	private var filter: [ArchiveEntry]? = nil
+	var fileURL: URL? = nil
+	var data: [ArchiveEntry] = []
+	var filter: [ArchiveEntry]? = nil
 	
 	override var nibName: NSNib.Name? {
 		return NSNib.Name("ArchiveController")
@@ -27,34 +27,6 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		outline.setDraggingSourceOperationMask(.copy, forLocal: false)
 	}
 	
-	// Use these two to disable initial focus of search field
-	
-//	override func viewWillAppear() {
-//		searchField.refusesFirstResponder = true
-//	}
-	
-//	override func viewDidAppear() {
-//		searchField.refusesFirstResponder = false
-//	}
-	
-	
-	// MARK: - Key-Value Observer
-	
-//	private var kvo: NSKeyValueObservation?
-//	
-//	override func viewWillAppear() {
-//		kvo = checkboxDirs.observe(\.state) { _, _ in
-//			self.applyFilter()
-//		}
-//	}
-//	
-//	override func viewDidDisappear() {
-//		kvo?.invalidate()
-//	}
-	
-	
-	// MARK: - Load data
-	
 	@discardableResult func load(_ url: URL) -> Bool {
 		fileURL = nil
 		data = []
@@ -64,7 +36,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 				data.append(entry)
 			}
 			fileURL = url
-			updateMetaInfo(archive)
+			metaInfo.stringValue = archive.metaInfo()
 			outline.reloadData()
 			applySort() // apply previous sort & filter
 			return true
@@ -74,17 +46,6 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 			return false
 		}
 	}
-	
-	func updateMetaInfo(_ archive: LibArchive) {
-		var txt = Formatter.bytes(archive.compressedSize) + " / " + Formatter.bytes(archive.uncompressedSize)
-		if archive.uncompressedSize > 0 {
-			let ratio = 1 - Float(archive.compressedSize) / Float(archive.uncompressedSize)
-			let percent = Int(ratio * 1000) / 10
-			txt += " (\(percent)%)"
-		}
-		metaInfo.stringValue = "\(txt) — \(archive.count) items"
-	}
-	
 	
 	// MARK: - Outline View
 	
@@ -98,253 +59,5 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	
 	func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
 		false
-	}
-	
-	func outlineView(_ outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
-		applySort()
-	}
-	
-	func outlineView(_ outlineView: NSOutlineView, willDisplayCell cell: Any, for tableColumn: NSTableColumn?, item: Any) {
-		guard let cell = cell as? NSCell, let obj = item as? ArchiveEntry  else {
-			return
-		}
-		switch tableColumn?.identifier {
-		case NSUserInterfaceItemIdentifier(rawValue: "icon"):
-			switch obj.filetype {
-			case .RegularFile:
-				cell.image = NSImage(named: "fileTemplate")
-			case .SymbolicLink:
-				cell.image = NSImage(named: "linkTemplate")
-			case .Directory:
-				cell.image = NSImage(named: NSImage.folderName)
-			default:
-				cell.image = nil
-			}
-		case NSUserInterfaceItemIdentifier(rawValue: "path"):
-			cell.stringValue = obj.path
-		case NSUserInterfaceItemIdentifier(rawValue: "size"):
-			cell.stringValue = Formatter.bytes(obj.size)
-		case NSUserInterfaceItemIdentifier(rawValue: "flag"):
-			cell.stringValue = obj.perm.str
-		case NSUserInterfaceItemIdentifier(rawValue: "date"):
-			cell.stringValue = Formatter.date(obj.modified)
-		default: break
-		}
-	}
-	
-	func applySort() {
-		data.sort(with: outline.sortDescriptors)
-		applyFilter()
-	}
-	
-	
-	// MARK: - Search
-	
-	var searchTimer: Timer?
-	
-	@IBAction func didSearch(_ sender: NSSearchField) {
-		let debounce = sender.stringValue.isEmpty ? 0.02 : 0.2
-		searchTimer?.invalidate()
-		searchTimer = Timer.scheduledTimer(withTimeInterval: debounce, repeats: false) { [weak self] _ in
-			self?.applyFilter()
-		}
-	}
-	
-	// CMD + F to search
-	override func keyDown(with event: NSEvent) {
-		if event.characters == "f", event.modifierFlags.contains(.command), !searchField.isHidden {
-			searchField.becomeFirstResponder()
-		} else {
-			super.keyDown(with: event)
-		}
-	}
-	
-	// ESC inside search field / any NSView
-	override func cancelOperation(_ sender: Any?) {
-		self.view.window?.performSelector(onMainThread: #selector(NSWindow.makeFirstResponder(_:)), with: self.outline, waitUntilDone: false)
-	}
-	
-	
-	// MARK: - Filter
-	
-	@IBAction func toggleFilter(_ sender: NSSegmentedControl) {
-		applyFilter()
-	}
-	
-	func applyFilter() {
-		switch (searchField.stringValue, MultiSelectFilter(rawValue: cfgFilter.multiSelection).asFiletype()) {
-		case ("", nil): filter = nil
-		case ("", let filtr): filter = data.filter { filtr!.contains($0.filetype) }
-		case (let search, nil): filter = data.filter { $0.path.contains(search) }
-		case (let search, let filtr): filter = data.filter { $0.path.contains(search) && filtr!.contains($0.filetype) }
-		}
-		outline.reloadData()
-	}
-}
-
-struct MultiSelectFilter: OptionSet {
-	let rawValue: Int
-	
-	static let folder = Self(rawValue: 1)
-	static let file   = Self(rawValue: 2)
-	static let link   = Self(rawValue: 4)
-	
-	func asFiletype() ->  Set<Filetype>? {
-		// no need to filter if all types are selected
-		if rawValue == 7 {
-			return nil
-		}
-		var rv = Set<Filetype>()
-		if self.contains(.folder) { rv.formUnion(Filetype.dirs) }
-		if self.contains(.file) { rv.formUnion(Filetype.files) }
-		if self.contains(.link) { rv.formUnion(Filetype.links) }
-		return rv.isEmpty ? nil : rv // also no filter if none is selected
-	}
-}
-
-// All components must have tag > 0 + tags must be bitwise exclusive
-extension NSSegmentedControl {
-	var multiSelection: Int {
-		get {
-			(0..<self.segmentCount).reduce(0) {
-				$0 + (self.isSelected(forSegment: $1) ? self.tag(forSegment: $1) : 0)
-			}
-		}
-		set {
-			for i in 0..<self.segmentCount {
-				self.setSelected((self.tag(forSegment: i) & newValue) != 0, forSegment: i)
-			}
-		}
-	}
-}
-
-
-// MARK: - Sorting
-
-extension Array<ArchiveEntry> {
-	@discardableResult
-	mutating func sort(with sortDescriptors: [NSSortDescriptor]) -> Bool {
-		if #available(macOS 12.0, *) {
-			let comp = keyPathComperators(from: sortDescriptors)
-			if !comp.isEmpty {
-				self.sort(using: comp)
-			}
-			return !comp.isEmpty
-		} else {
-			return sortUsingFunction(with: sortDescriptors)
-		}
-	}
-	
-	@available(macOS 12.0, *)
-	private func keyPathComperators(from sortDescriptors: [NSSortDescriptor]) -> [KeyPathComparator<ArchiveEntry>] {
-		sortDescriptors.map {
-			let order = $0.ascending ? SortOrder.forward : .reverse
-			return switch $0.key {
-			case "path": KeyPathComparator(\ArchiveEntry.path, order: order)
-			case "date": KeyPathComparator(\ArchiveEntry.modified, order: order)
-			case "size": KeyPathComparator(\ArchiveEntry.size, order: order)
-			case "flag": KeyPathComparator(\ArchiveEntry.perm.raw, order: order)
-			default: KeyPathComparator(\ArchiveEntry.index, order: .forward) // always ascending
-			}
-		}
-	}
-	
-	private mutating func sortUsingFunction(with sortDescriptors: [NSSortDescriptor]) -> Bool {
-		let comperators = sortDescriptors.map { ($0.key, $0.ascending) }
-		if comperators.isEmpty {
-			return false
-		}
-		self.sort { lhs, rhs in
-			for (key, asc) in comperators {
-				switch key {
-				case "path":
-					if lhs.path != rhs.path {
-						return asc ? lhs.path < rhs.path : lhs.path > rhs.path
-					}
-				case "date":
-					if lhs.modified != rhs.modified {
-						return asc ? lhs.modified < rhs.modified : lhs.modified > rhs.modified
-					}
-				case "size":
-					if lhs.size != rhs.size {
-						return asc ? lhs.size < rhs.size : lhs.size > rhs.size
-					}
-				case "flag":
-					if lhs.perm.raw != rhs.perm.raw {
-						return asc ? lhs.perm.raw < rhs.perm.raw : lhs.perm.raw > rhs.perm.raw
-					}
-				default:
-					if lhs.index != rhs.index {
-						return lhs.index < rhs.index // always ascending
-					}
-				}
-			}
-			return false
-		}
-		return true
-	}
-}
-
-
-// MARK: - Drag to extract
-
-extension ArchiveController: NSFilePromiseProviderDelegate {
-	func filePromiseProvider(_ filePromiseProvider: NSFilePromiseProvider, fileNameForType fileType: String) -> String {
-		let entry = filePromiseProvider.userInfo as! ArchiveEntry
-		return String(entry.path.split(separator: "/").last!)
-	}
-	
-	func filePromiseProvider(_ filePromiseProvider: NSFilePromiseProvider, writePromiseTo url: URL, completionHandler: @escaping @Sendable ((any Error)?) -> Void) {
-		guard let archive_url = self.fileURL else {
-			return
-		}
-		do {
-			let entry = filePromiseProvider.userInfo as! ArchiveEntry
-			try LibArchive(archive_url).extract(entry.index, to: url)
-			completionHandler(nil)
-		} catch {
-			completionHandler(error)
-			let alert = NSAlert()
-			alert.alertStyle = .critical
-			alert.messageText = error.localizedDescription
-			alert.runModal()
-			return
-		}
-	}
-	
-	func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> (any NSPasteboardWriting)? {
-		if (item as? ArchiveEntry)?.filetype == .Directory {
-			return nil
-		}
-		let provider = NSFilePromiseProvider(fileType: "public.data", delegate: self)
-		provider.userInfo = item
-		return provider
-	}
-}
-
-
-// MARK: - Formatter
-
-private struct Formatter {
-	private static let fmtDate: DateFormatter = {
-		let x = DateFormatter()
-		x.dateFormat = "yyyy-MM-dd  HH:mm:ss"
-		return x
-	}()
-	
-	/// Human readable date formatter
-	static func date(_ time: time_t) -> String {
-		Self.fmtDate.string(from: Date(timeIntervalSince1970: TimeInterval(time)))
-	}
-	
-	/// Human readable bytes formatter
-	static func bytes(_ size: Int64) -> String {
-		if size < 0 {
-			"--"
-		} else if size < 1024 {
-			"\(size) B"
-		} else {
-			ByteCountFormatter.string(fromByteCount: size, countStyle: .file)
-		}
 	}
 }
