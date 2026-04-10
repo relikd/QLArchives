@@ -10,7 +10,7 @@ extension ArchiveController {
 	
 	/// Triggered on: load, filter, search, sort
 	func applyFilter() {
-		switch (searchField.stringValue, MultiSelectFilter(rawValue: cfgFilter.multiSelection).asFiletype()) {
+		switch (searchField.stringValue, cfgFilter.selectedTypeFilter.asFiletype()) {
 		case ("", nil): filter = nil
 		case ("", let filtr): filter = data.filter { filtr!.contains($0.filetype) }
 		case (let search, nil): filter = data.filter { $0.path.contains(search) }
@@ -20,7 +20,7 @@ extension ArchiveController {
 	}
 }
 
-struct MultiSelectFilter: OptionSet {
+struct TypeFilter: OptionSet {
 	let rawValue: Int
 	
 	static let folder = Self(rawValue: 1)
@@ -42,15 +42,15 @@ struct MultiSelectFilter: OptionSet {
 
 // All components must have tag > 0 + tags must be bitwise exclusive
 extension NSSegmentedControl {
-	var multiSelection: Int {
+	var selectedTypeFilter: TypeFilter {
 		get {
-			(0..<self.segmentCount).reduce(0) {
+			TypeFilter(rawValue: (0..<self.segmentCount).reduce(0) {
 				$0 + (self.isSelected(forSegment: $1) ? self.tag(forSegment: $1) : 0)
-			}
+			})
 		}
 		set {
 			for i in 0..<self.segmentCount {
-				self.setSelected((self.tag(forSegment: i) & newValue) != 0, forSegment: i)
+				self.setSelected((self.tag(forSegment: i) & newValue.rawValue) != 0, forSegment: i)
 			}
 		}
 	}
