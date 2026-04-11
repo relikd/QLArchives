@@ -5,7 +5,7 @@ import AppKit
 extension ArchiveController {
 	/// This postpones tree data creation until TreeView is in use.
 	///
-	/// Safe to call multiple times (no-op after `tree` is populated).
+	/// Safe to call multiple times (NO-OP after `tree` is populated).
 	/// - Depends on `rows` and `viewMode`.
 	/// - Called from `load()` and `changeViewMode()`.
 	func initTreeData(isInitial: Bool = false) {
@@ -49,7 +49,7 @@ extension ArchiveController {
 	func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
 		switch viewMode {
 		case .list: false
-		case .tree: !(item as? TreeNode ?? tree).children.isEmpty
+		case .tree: !(item as! TreeNode).children.isEmpty // expandable doesnt depend on filter
 		}
 	}
 }
@@ -81,7 +81,7 @@ extension ArchiveController {
 	func performFilterOnTree() {
 		if searchActive {
 			tree.iterAll().forEach { $0.filteredChildren = $0.children.filter(\.matchSearch) }
-		} else {
+		} else if tree.filteredChildren != nil { // sufficient to check root node filter
 			tree.iterAll().forEach { $0.filteredChildren = nil }
 		}
 	}
@@ -110,7 +110,7 @@ class Row: HasArchiveEntry {
 
 class TreeNode: HasArchiveEntry {
 	let name: String
-	weak var row: Row? // not ArchiveEntry, to reuse the search filter
+	weak var row: Row? // we could store ArchiveEntry, but that would duplicate data in memory
 	var children: [TreeNode] = []
 	weak var parent: TreeNode?
 	

@@ -32,16 +32,10 @@ extension ArchiveController {
 	@IBAction func changeViewMode(_ sender: NSSegmentedControl) {
 		viewMode = sender.selectedViewMode
 		setViewModeDependentToolbar()
-		initTreeData() // depends on `viewMode`
-		if searchActive || filterActive {
-			// because search is only applied for the active view mode
-			applySearch()
-			performFilterAndReload()
-		} else {
-			outline.reloadData()
-		}
 		toggleRestorableSortState()
-		restoreCollapsibleState()
+		initTreeData() // depends on `viewMode`, NO-OP if already loaded
+		applySearch() // because search is only applied for the active view mode, NO-OP if not active
+		performFilterAndReload()
 	}
 	
 	/// Switch toolbar depending on current view mode (also called during `viewDidLoad`)
