@@ -38,7 +38,7 @@ extension ArchiveController {
 	/// Called when user clicks on any of the type toggles.
 	@IBAction func toggleFilter(_ sender: NSSegmentedControl) {
 		applyFilter()
-		reload()
+		performFilterAndReload()
 	}
 	
 	/// `true` if search field has content

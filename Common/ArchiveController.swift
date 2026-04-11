@@ -67,7 +67,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 			applySort()
 			applyFilter()
 			applySearch()
-			reload()
+			performFilterAndReload()
 			return true
 		} catch {
 			self.view = errorView

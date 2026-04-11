@@ -33,7 +33,7 @@ extension ArchiveController {
 		viewMode = sender.selectedViewMode
 		setViewModeDependentToolbar()
 		initTreeData() // depends on `viewMode`
-		reload()
+		outline.reloadData()
 		toggleRestorableSortState()
 		restoreCollapsibleState()
 	}

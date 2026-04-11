@@ -2,6 +2,8 @@ import AppKit
 
 // Allow user to expand and collapse tree structure
 
+// TODO: defaults setting to load with all expanded
+
 enum ExpandAction {
 	case expand, collapse
 }

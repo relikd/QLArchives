@@ -21,13 +21,14 @@ extension ArchiveController {
 	}
 	
 	/// Recompute `filteredRows` and reload outline view
-	func reload() {
+	func performFilterAndReload() {
 		switch (searchActive, filterActive) {
 		case (true, true): filteredRows = rows.filter { $0.matchSearch && $0.matchFilter }
 		case (true, _): filteredRows = rows.filter { $0.matchSearch }
 		case (_, true): filteredRows = rows.filter { $0.matchFilter }
 		case (_, _): filteredRows = nil
 		}
+		// TODO: filter tree
 		outline.reloadData()
 	}
 	

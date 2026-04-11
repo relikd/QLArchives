@@ -11,7 +11,7 @@ extension ArchiveController {
 		debounceTimer?.invalidate()
 		debounceTimer = Timer.scheduledTimer(withTimeInterval: debounce, repeats: false) { [weak self] _ in
 			self?.applySearch()
-			self?.reload()
+			self?.performFilterAndReload()
 		}
 	}
 	
