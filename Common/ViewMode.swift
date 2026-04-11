@@ -32,7 +32,7 @@ extension ArchiveController {
 	@IBAction func changeViewMode(_ sender: NSSegmentedControl) {
 		viewMode = sender.selectedViewMode
 		setViewModeDependentToolbar()
-		initTreeData(isInitial: true) // depends on `viewMode`
+		initTreeData() // depends on `viewMode`
 		reload()
 	}
 	

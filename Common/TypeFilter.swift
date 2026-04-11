@@ -2,24 +2,6 @@ import AppKit
 
 // Allow user to filter rows by selecting specific types (directory, file, link)
 
-extension ArchiveController {
-	/// Called when user clicks on any of the type toggles.
-	@IBAction func toggleFilter(_ sender: NSSegmentedControl) {
-		applyFilter()
-		reload()
-	}
-	
-	/// `true` if search field has content
-	var filterActive: Bool { cfgFilter.selectedTypeFilter.isOn }
-	
-	/// Does __not__ reload data.
-	func applyFilter() {
-		if let filtr = cfgFilter.selectedTypeFilter.asFiletype() {
-			rows.forEach { $0.matchFilter = filtr.contains($0.entry.filetype) }
-		}
-	}
-}
-
 struct TypeFilter: OptionSet {
 	let rawValue: Int
 	
@@ -46,15 +28,26 @@ struct TypeFilter: OptionSet {
 // All components must have tag > 0 + tags must be bitwise exclusive
 extension NSSegmentedControl {
 	var selectedTypeFilter: TypeFilter {
-		get {
-			TypeFilter(rawValue: (0..<self.segmentCount).reduce(0) {
-				$0 + (self.isSelected(forSegment: $1) ? self.tag(forSegment: $1) : 0)
-			})
-		}
-		set {
-			for i in 0..<self.segmentCount {
-				self.setSelected((self.tag(forSegment: i) & newValue.rawValue) != 0, forSegment: i)
-			}
+		TypeFilter(rawValue: (0..<self.segmentCount).reduce(0) {
+			$0 + (self.isSelected(forSegment: $1) ? self.tag(forSegment: $1) : 0)
+		})
+	}
+}
+
+extension ArchiveController {
+	/// Called when user clicks on any of the type toggles.
+	@IBAction func toggleFilter(_ sender: NSSegmentedControl) {
+		applyFilter()
+		reload()
+	}
+	
+	/// `true` if search field has content
+	var filterActive: Bool { cfgFilter.selectedTypeFilter.isOn }
+	
+	/// Does __not__ reload data.
+	func applyFilter() {
+		if let filtr = cfgFilter.selectedTypeFilter.asFiletype() {
+			rows.forEach { $0.matchFilter = filtr.contains($0.entry.filetype) }
 		}
 	}
 }
