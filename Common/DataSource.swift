@@ -82,7 +82,7 @@ class Row: HasArchiveEntry {
 
 class TreeNode: HasArchiveEntry {
 	let name: String
-	var row: Row? // not ArchiveEntry, to reuse the search filter
+	weak var row: Row? // not ArchiveEntry, to reuse the search filter
 	var children: [TreeNode] = []
 	weak var parent: TreeNode?
 	
