@@ -61,9 +61,13 @@ extension ArchiveController {
 }
 
 
+protocol HasArchiveEntry {
+	var entry: ArchiveEntry { get }
+}
+
 // MARK: - List View
 
-class Row {
+class Row: HasArchiveEntry {
 	let entry: ArchiveEntry
 	var matchSearch = false
 	var matchFilter = false
@@ -76,10 +80,12 @@ class Row {
 
 // MARK: - Tree View
 
-class TreeNode {
+class TreeNode: HasArchiveEntry {
 	let name: String
 	var row: Row? // not ArchiveEntry, to reuse the search filter
 	var children: [TreeNode] = []
+	
+	var entry: ArchiveEntry { row?.entry ?? ArchiveEntry(index: 0, path: name, size: 0, perm: Perm.init(raw: 0), filetype: .Directory, modified: 0) }
 	
 	init(name: String = "") {
 		self.name = name

@@ -12,13 +12,19 @@ extension ArchiveController {
 	/// Does __not__ reload data.
 	func applySort() {
 		switch viewMode {
-		case .list: rows.sort(with: outline.sortDescriptors)
-		case .tree: break // TODO: sort on tree
+		case .list:
+			rows.sort(with: outline.sortDescriptors)
+		case .tree:
+			var queue: [TreeNode] = [tree]
+			while let item = queue.popLast() {
+				item.children.sort(with: outline.sortDescriptors)
+				queue.append(contentsOf: item.children)
+			}
 		}
 	}
 }
 
-extension Array where Element == Row {
+extension Array where Element: HasArchiveEntry {
 	@discardableResult
 	mutating func sort(with sortDescriptors: [NSSortDescriptor]) -> Bool {
 		if #available(macOS 12.0, *) {
