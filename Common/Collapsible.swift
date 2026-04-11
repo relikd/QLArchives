@@ -2,8 +2,6 @@ import AppKit
 
 // Allow user to expand and collapse tree structure
 
-// TODO: defaults setting to load with all expanded
-
 enum ExpandAction {
 	case expand, collapse
 }
@@ -22,7 +20,7 @@ extension ArchiveController {
 	///
 	/// Called in `viewDidLoad`.
 	func initCollapsible() {
-		cfgTreeExpand.set(.collapse, enabled: false)
+		cfgTreeExpand.set(autoExpandOnce ? .expand : .collapse, enabled: false)
 	}
 	
 	// enable the opposite action when at least one row is collapsed
@@ -42,6 +40,11 @@ extension ArchiveController {
 	/// Restore state when switching between view modes.
 	func restoreCollapsibleState() {
 		guard viewMode == .tree else {
+			return
+		}
+		if autoExpandOnce {
+			outline.expandItem(nil, expandChildren: true)
+			autoExpandOnce = false
 			return
 		}
 		// alternatively we could keep the order of expand clicks,

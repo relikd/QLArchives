@@ -24,6 +24,8 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	var expandedNodes = NSHashTable<TreeNode>.weakObjects()
 	
 	var viewMode: ViewMode = .list
+	/// `true` if user has set user-defaults. Reset on `load(:)`
+	var autoExpandOnce: Bool = false
 	/// Used for data export
 	var fileURL: URL? = nil
 	/// Used for List view
@@ -45,6 +47,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		metaInfo.stringValue = ""
 		otherSortDescriptors = []
 		expandedNodes.removeAllObjects()
+		autoExpandOnce = UserDefaults.standard.bool(forKey: "autoExpand")
 	}
 	
 	/// Called (once) before `load(:)`
@@ -67,7 +70,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 			applySort()
 			applyFilter()
 			applySearch()
-			performFilterAndReload()
+			performFilterAndReload(restoreCollapsible: true)
 			return true
 		} catch {
 			self.view = errorView

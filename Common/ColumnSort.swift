@@ -6,7 +6,7 @@ extension ArchiveController {
 	/// Called when user clicks on a column header.
 	func outlineView(_ outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
 		applySort()
-		performFilterAndReload()
+		performFilterAndReload(restoreCollapsible: false) // count doesnt change, only order
 	}
 	
 	/// Does __not__ reload data.

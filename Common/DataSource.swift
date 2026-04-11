@@ -59,12 +59,15 @@ extension ArchiveController {
 
 extension ArchiveController {
 	/// Recompute filter and reload outline view.
-	func performFilterAndReload() {
+	func performFilterAndReload(restoreCollapsible: Bool = true) {
 		switch viewMode {
 		case .list: performFilterOnList()
 		case .tree: performFilterOnTree()
 		}
 		outline.reloadData()
+		if restoreCollapsible {
+			restoreCollapsibleState()
+		}
 	}
 	
 	/// Sets `filteredRows`
