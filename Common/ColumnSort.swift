@@ -22,6 +22,13 @@ extension ArchiveController {
 			}
 		}
 	}
+	
+	/// Restore state when switching between view modes.
+	func toggleRestorableSortState() {
+		let newSort = otherSortDescriptors
+		otherSortDescriptors = outline.sortDescriptors
+		outline.sortDescriptors = newSort
+	}
 }
 
 extension Array where Element: HasArchiveEntry {

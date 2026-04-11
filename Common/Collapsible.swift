@@ -2,8 +2,6 @@ import AppKit
 
 // Allow user to expand and collapse tree structure
 
-// TODO: store collapsible state and restore on view mode change
-
 enum ExpandAction {
 	case expand, collapse
 }
@@ -30,11 +28,22 @@ extension ArchiveController {
 	// but that would eat unnecessary resources for each click
 	func outlineViewItemDidCollapse(_ notification: Notification) {
 		cfgTreeExpand.set(.expand, enabled: true)
+		expandedNodes.remove(notification.userInfo?["NSObject"] as? TreeNode)
 	}
 	
 	// ... same for the other action
 	func outlineViewItemDidExpand(_ notification: Notification) {
 		cfgTreeExpand.set(.collapse, enabled: true)
+		expandedNodes.add(notification.userInfo?["NSObject"] as? TreeNode)
+	}
+	
+	/// Restore state when switching between view modes.
+	func restoreCollapsibleState() {
+		if viewMode == .tree {
+			for node in expandedNodes.allObjects {
+				outline.expandItem(node)
+			}
+		}
 	}
 	
 	/// Triggers when user clicks expand / collapse button in tree view mode

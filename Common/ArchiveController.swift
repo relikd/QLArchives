@@ -21,6 +21,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	// Restore state when switching between view modes
 	// current `sortDescriptors` are loaded via Bindings
 	var otherSortDescriptors: [NSSortDescriptor] = []
+	var expandedNodes = NSHashTable<TreeNode>.weakObjects()
 	
 	var viewMode: ViewMode = .list
 	/// Used for data export
@@ -43,6 +44,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		tree = nil
 		metaInfo.stringValue = ""
 		otherSortDescriptors = []
+		expandedNodes.removeAllObjects()
 	}
 	
 	/// Called (once) before `load(:)`

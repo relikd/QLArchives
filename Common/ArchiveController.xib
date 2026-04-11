@@ -99,7 +99,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="328"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" tableStyle="fullWidth" alternatingRowBackgroundColors="YES" autosaveColumns="NO" autosaveName="colums" rowHeight="16" headerView="cuO-Hd-FLf" indentationPerLevel="13" outlineTableColumn="dCz-gR-l2M" id="yTC-jh-ZQv">
+                            <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" tableStyle="fullWidth" alternatingRowBackgroundColors="YES" autosaveColumns="NO" autosaveName="" rowHeight="16" headerView="cuO-Hd-FLf" indentationPerLevel="13" outlineTableColumn="dCz-gR-l2M" id="yTC-jh-ZQv">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <size key="intercellSpacing" width="17" height="4"/>
