@@ -18,6 +18,10 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	@IBOutlet var errorView: NSView!
 	@IBOutlet var errorText: NSTextField!
 	
+	// Restore state when switching between view modes
+	// current `sortDescriptors` are loaded via Bindings
+	var otherSortDescriptors: [NSSortDescriptor] = []
+	
 	var viewMode: ViewMode = .list
 	/// Used for data export
 	var fileURL: URL? = nil
@@ -38,6 +42,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		filteredRows = nil
 		tree = nil
 		metaInfo.stringValue = ""
+		otherSortDescriptors = []
 	}
 	
 	/// Called (once) before `load(:)`

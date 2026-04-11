@@ -30,10 +30,18 @@ extension ArchiveController {
 	
 	/// Triggers when user changes view mode
 	@IBAction func changeViewMode(_ sender: NSSegmentedControl) {
+		toggleRestorableState()
 		viewMode = sender.selectedViewMode
 		setViewModeDependentToolbar()
 		initTreeData() // depends on `viewMode`
 		reload()
+	}
+	
+	/// Restore state when switching between view modes.
+	func toggleRestorableState() {
+		let newSort = otherSortDescriptors
+		otherSortDescriptors = outline.sortDescriptors
+		outline.sortDescriptors = newSort
 	}
 	
 	/// Switch toolbar depending on current view mode (also called during `viewDidLoad`)
