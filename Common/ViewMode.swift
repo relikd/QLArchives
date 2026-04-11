@@ -33,7 +33,13 @@ extension ArchiveController {
 		viewMode = sender.selectedViewMode
 		setViewModeDependentToolbar()
 		initTreeData() // depends on `viewMode`
-		outline.reloadData()
+		if searchActive {
+			// because search is only applied for the active view mode
+			applySearch()
+			performFilterAndReload()
+		} else {
+			outline.reloadData()
+		}
 		toggleRestorableSortState()
 		restoreCollapsibleState()
 	}

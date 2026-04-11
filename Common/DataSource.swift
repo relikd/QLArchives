@@ -20,18 +20,6 @@ extension ArchiveController {
 		}
 	}
 	
-	/// Recompute `filteredRows` and reload outline view
-	func performFilterAndReload() {
-		switch (searchActive, filterActive) {
-		case (true, true): filteredRows = rows.filter { $0.matchSearch && $0.matchFilter }
-		case (true, _): filteredRows = rows.filter { $0.matchSearch }
-		case (_, true): filteredRows = rows.filter { $0.matchFilter }
-		case (_, _): filteredRows = nil
-		}
-		// TODO: filter tree
-		outline.reloadData()
-	}
-	
 	func rowEntry(_ item: Any) -> ArchiveEntry? {
 		switch viewMode {
 		case .list: (item as? Row)?.entry
@@ -39,24 +27,62 @@ extension ArchiveController {
 		}
 	}
 	
-	func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
+	@inline(__always)
+	private func _dataSource(_ item: Any?) -> [Any] {
 		switch viewMode {
-		case .list: filteredRows?.count ?? rows.count
-		case .tree: (item as? TreeNode ?? tree)?.children.count ?? 0
+		case .list:
+			return filteredRows ?? rows
+		case .tree:
+			let node = (item as? TreeNode ?? tree)
+			return node?.filteredChildren ?? node?.children ?? []
 		}
 	}
 	
+	func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
+		_dataSource(item).count
+	}
+	
 	func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-		switch viewMode {
-		case .list: filteredRows?[index] ?? rows[index]
-		case .tree: (item as? TreeNode ?? tree).children[index]
-		}
+		_dataSource(item)[index]
 	}
 	
 	func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
 		switch viewMode {
 		case .list: false
 		case .tree: !(item as? TreeNode ?? tree).children.isEmpty
+		}
+	}
+}
+
+
+// MARK: - Perform Filter
+
+extension ArchiveController {
+	/// Recompute filter and reload outline view.
+	func performFilterAndReload() {
+		switch viewMode {
+		case .list: performFilterOnList()
+		case .tree: performFilterOnTree()
+		}
+		outline.reloadData()
+	}
+	
+	/// Sets `filteredRows`
+	func performFilterOnList() {
+		switch (searchActive, filterActive) {
+		case (true, true): filteredRows = rows.filter { $0.matchSearch && $0.matchFilter }
+		case (true, _): filteredRows = rows.filter { $0.matchSearch }
+		case (_, true): filteredRows = rows.filter { $0.matchFilter }
+		case (_, _): filteredRows = nil
+		}
+	}
+	
+	/// Sets `filteredChildren` for all nodes where some child has `matchSearch` flag set.
+	func performFilterOnTree() {
+		if searchActive {
+			tree.iterAll().forEach { $0.filteredChildren = $0.children.filter(\.matchSearch) }
+		} else {
+			tree.iterAll().forEach { $0.filteredChildren = nil }
 		}
 	}
 }
@@ -87,6 +113,10 @@ class TreeNode: HasArchiveEntry {
 	weak var row: Row? // not ArchiveEntry, to reuse the search filter
 	var children: [TreeNode] = []
 	weak var parent: TreeNode?
+	
+	// cant reuse row search filter bebecause some TreeNodes dont have a row reference
+	var matchSearch: Bool = false
+	var filteredChildren: [TreeNode]? = nil
 	
 	var entry: ArchiveEntry { row?.entry ?? ArchiveEntry(index: 0, path: name, size: 0, perm: Perm.init(raw: 0), filetype: .Directory, modified: 0) }
 	
