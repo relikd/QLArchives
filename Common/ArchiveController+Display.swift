@@ -4,6 +4,7 @@ import AppKit
 
 extension LibArchive {
 	/// Generate info text for archive meta data (entry count, compression ratio, etc.)
+	/// @Note Only valid after all entries have been processed.
 	func metaInfo() -> String {
 		var txt = Formatter.bytes(self.compressedSize) + " / " + Formatter.bytes(self.uncompressedSize)
 		if self.uncompressedSize > 0 {
@@ -18,7 +19,20 @@ extension LibArchive {
 extension ArchiveController {
 	/// Cell display
 	func outlineView(_ outlineView: NSOutlineView, willDisplayCell cell: Any, for tableColumn: NSTableColumn?, item: Any) {
-		guard let cell = cell as? NSCell, let obj = (item as? Row)?.entry  else {
+		guard let cell = cell as? NSCell  else {
+			return
+		}
+		// overwrite name column for tree view, in all other cases fall back to archive entry
+		if let node = (item as? TreeNode) {
+			// TODO: should non-archive folders get a folder icon?
+			// TODO: should folder icons be shown in TreeView mode?
+			if tableColumn?.identifier.rawValue == "path" {
+				cell.stringValue = node.name
+				return
+			}
+		}
+		// Archive entry fields
+		guard let obj = rowEntry(item) else {
 			return
 		}
 		switch tableColumn?.identifier {

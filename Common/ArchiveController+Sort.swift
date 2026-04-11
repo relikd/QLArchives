@@ -11,7 +11,10 @@ extension ArchiveController {
 	
 	/// Does __not__ reload data.
 	func applySort() {
-		rows.sort(with: outline.sortDescriptors)
+		switch viewMode {
+		case .list: rows.sort(with: outline.sortDescriptors)
+		case .tree: break // TODO: sort on tree
+		}
 	}
 }
 

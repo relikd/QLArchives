@@ -1,42 +1,62 @@
 import Foundation
 import Cocoa
 
-// TODO: collapsible nested folders
-
 class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewDataSource {
 	
+	@IBOutlet var cfgViewMode: NSSegmentedControl!
 	@IBOutlet var cfgFilter: NSSegmentedControl!
+	@IBOutlet var cfgTreeExpand: NSSegmentedControl!
 	@IBOutlet var searchField: NSSearchField!
 	@IBOutlet var metaInfo: NSTextField!
+	
+	@IBOutlet var toolbarPlaceholder: NSView!
+	@IBOutlet var toolbarListView: NSView!
+	@IBOutlet var toolbarTreeView: NSView!
 	
 	@IBOutlet var outline: NSOutlineView!
 	
 	@IBOutlet var errorView: NSView!
 	@IBOutlet var errorText: NSTextField!
 	
+	var viewMode: ViewMode = .list
+	/// Used for data export
 	var fileURL: URL? = nil
+	/// Used for List view
 	var rows: [Row] = []
 	var filteredRows: [Row]? = nil
+	/// Used for Tree view
+	var tree: TreeNode! // will be populated before usage
 	
 	override var nibName: NSNib.Name? {
 		return NSNib.Name("ArchiveController")
 	}
 	
-	override func viewDidLoad() {
-		metaInfo.stringValue = ""
-		outline.setDraggingSourceOperationMask(.copy, forLocal: false)
-	}
-	
-	@discardableResult func load(_ url: URL) -> Bool {
+	/// Reset all variables to an empty state
+	private func trash() {
 		fileURL = nil
 		rows = []
+		filteredRows = nil
+		tree = nil
+		metaInfo.stringValue = ""
+	}
+	
+	/// Called (once) before `load(:)`
+	override func viewDidLoad() {
+		trash()
+		initViewMode()
+		initCollapsible()
+		initExport()
+	}
+	
+	/// Can be called multiple times
+	@discardableResult func load(_ url: URL) -> Bool {
+		trash()
 		do {
 			let archive = try LibArchive(url)
-			for entry in archive {
-				rows.append(Row(entry: entry))
-			}
-			fileURL = url
+			rows = archive.map { Row(entry: $0) }
 			metaInfo.stringValue = archive.metaInfo()
+			fileURL = url
+			initTreeData(isInitial: true) // before sort, depends on `rows`
 			applySort()
 			applyFilter()
 			applySearch()
@@ -49,41 +69,15 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		}
 	}
 	
-	/// Recompute `filteredRows` and reload outline view
-	func reload() {
-		switch (searchActive, filterActive) {
-		case (true, true): filteredRows = rows.filter { $0.matchSearch && $0.matchFilter }
-		case (true, _): filteredRows = rows.filter { $0.matchSearch }
-		case (_, true): filteredRows = rows.filter { $0.matchFilter }
-		case (_, _): filteredRows = nil
-		}
-		outline.reloadData()
+	// MARK: - Key-Value Observer
+	
+	private var kvo: NSKeyValueObservation?
+	
+	override func viewWillAppear() {
+		kvo = registerViewModeChanges()
 	}
 	
-	// MARK: - Outline View
-	
-	func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-		filteredRows?.count ?? rows.count
-	}
-	
-	func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-		filteredRows?[index] ?? rows[index]
-	}
-	
-	func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-		false
-	}
-}
-
-
-// MARK: - Row Entry
-
-class Row {
-	let entry: ArchiveEntry
-	var matchSearch = false
-	var matchFilter = false
-	
-	init(entry: ArchiveEntry) {
-		self.entry = entry
+	override func viewDidDisappear() {
+		kvo?.invalidate()
 	}
 }

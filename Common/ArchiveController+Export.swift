@@ -3,9 +3,16 @@ import AppKit
 // Allow user to export individual files via drag & drop
 
 extension ArchiveController: NSFilePromiseProviderDelegate {
+	/// Enable drag & drop operation on outline view.
+	///
+	/// Called in `viewDidLoad`.
+	func initExport() {
+		outline.setDraggingSourceOperationMask(.copy, forLocal: false)
+	}
+	
 	/// Called whenever user starts to drag some selected rows.
 	func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> (any NSPasteboardWriting)? {
-		if (item as? Row)?.entry.filetype == .Directory {
+		guard let entry = rowEntry(item), entry.filetype != .Directory else {
 			return nil
 		}
 		let provider = NSFilePromiseProvider(fileType: "public.data", delegate: self)
