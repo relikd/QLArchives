@@ -84,11 +84,13 @@ class TreeNode: HasArchiveEntry {
 	let name: String
 	var row: Row? // not ArchiveEntry, to reuse the search filter
 	var children: [TreeNode] = []
+	weak var parent: TreeNode?
 	
 	var entry: ArchiveEntry { row?.entry ?? ArchiveEntry(index: 0, path: name, size: 0, perm: Perm.init(raw: 0), filetype: .Directory, modified: 0) }
 	
-	init(name: String = "") {
+	init(name: String = "", parent: TreeNode) {
 		self.name = name
+		self.parent = parent
 	}
 	
 	/// Convert `Row` data structure into `TreeNode` structure while keeping references to `Row`
@@ -100,7 +102,7 @@ class TreeNode: HasArchiveEntry {
 				if let child = node.children.first(where: { $0.name == part }) {
 					node = child
 				} else {
-					let newNode = TreeNode(name: String(part))
+					let newNode = TreeNode(name: String(part), parent: node)
 					node.children.append(newNode)
 					node = newNode
 				}
