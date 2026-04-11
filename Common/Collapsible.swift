@@ -47,17 +47,12 @@ extension ArchiveController {
 		// alternatively we could keep the order of expand clicks,
 		// but then the remove operation above would be more complex
 		for node in expandedNodes.allObjects {
-			if outline.isItemExpanded(node) {
-				// if already expanded below, we can assume all parents already expanded
-				continue
-			}
-			// NSOutlineView cannot expand items if the parent isnt expanded.
-			var nodeList: [TreeNode] = [node]
-			while let par = nodeList.last!.parent {
-				nodeList.append(par)
-			}
-			for node in nodeList.reversed() {
-				outline.expandItem(node)
+			// if already expanded, we can assume all parents are expanded too
+			if !outline.isItemExpanded(node) {
+				// NSOutlineView cannot expand items if the parent isnt expanded
+				for node in node.allParents().reversed() {
+					outline.expandItem(node)
+				}
 			}
 		}
 	}

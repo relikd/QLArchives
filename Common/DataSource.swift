@@ -66,6 +66,7 @@ protocol HasArchiveEntry {
 	var entry: ArchiveEntry { get }
 }
 
+
 // MARK: - List View
 
 class Row: HasArchiveEntry {
@@ -110,6 +111,15 @@ class TreeNode: HasArchiveEntry {
 			}
 			node.row = row // auto-updated because referenced
 		}
+	}
+	
+	/// All parents (including `self`) in reverse order (inner-most child first).
+	func allParents() -> [TreeNode] {
+		var rv: [TreeNode] = [self]
+		while let par = rv.last!.parent {
+			rv.append(par)
+		}
+		return rv
 	}
 }
 
