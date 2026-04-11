@@ -121,5 +121,28 @@ class TreeNode: HasArchiveEntry {
 		}
 		return rv
 	}
+	
+	/// Depth-first and last-to-first.
+	func iterAll() -> TreeNodeIterator {
+		return TreeNodeIterator(self)
+	}
 }
 
+/// Reuse pattern for TreeNode iteration.
+struct TreeNodeIterator: IteratorProtocol, Sequence {
+	typealias Element = TreeNode
+	
+	private var queue: [TreeNode]
+	
+	init(_ root: TreeNode) {
+		self.queue = [root]
+	}
+	
+	mutating func next() -> TreeNode? {
+		guard let node = queue.popLast() else {
+			return nil
+		}
+		queue.append(contentsOf: node.children)
+		return node
+	}
+}

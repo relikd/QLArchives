@@ -12,14 +12,8 @@ extension ArchiveController {
 	/// Does __not__ reload data.
 	func applySort() {
 		switch viewMode {
-		case .list:
-			rows.sort(with: outline.sortDescriptors)
-		case .tree:
-			var queue: [TreeNode] = [tree]
-			while let item = queue.popLast() {
-				item.children.sort(with: outline.sortDescriptors)
-				queue.append(contentsOf: item.children)
-			}
+		case .list: rows.sort(with: outline.sortDescriptors)
+		case .tree: tree.iterAll().forEach { $0.children.sort(with: outline.sortDescriptors) }
 		}
 	}
 	
