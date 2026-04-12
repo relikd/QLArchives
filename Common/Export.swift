@@ -16,7 +16,7 @@ extension ArchiveController: NSFilePromiseProviderDelegate {
 			return nil
 		}
 		let provider = NSFilePromiseProvider(fileType: "public.data", delegate: self)
-		provider.userInfo = item
+		provider.userInfo = entry
 		return provider
 	}
 	
