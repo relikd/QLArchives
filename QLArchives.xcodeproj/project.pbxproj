@@ -11,8 +11,8 @@
 		5417FEFE2F886DD500E87747 /* Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5417FEFC2F886DD500E87747 /* Export.swift */; };
 		5417FF002F886E5F00E87747 /* TypeFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5417FEFF2F886E5F00E87747 /* TypeFilter.swift */; };
 		5417FF012F886E5F00E87747 /* TypeFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5417FEFF2F886E5F00E87747 /* TypeFilter.swift */; };
-		5417FF032F886F0600E87747 /* ColumnSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5417FF022F886F0600E87747 /* ColumnSort.swift */; };
-		5417FF042F886F0600E87747 /* ColumnSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5417FF022F886F0600E87747 /* ColumnSort.swift */; };
+		5417FF032F886F0600E87747 /* SortColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5417FF022F886F0600E87747 /* SortColumn.swift */; };
+		5417FF042F886F0600E87747 /* SortColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5417FF022F886F0600E87747 /* SortColumn.swift */; };
 		5417FF062F88701A00E87747 /* SearchFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5417FF052F88701A00E87747 /* SearchFilter.swift */; };
 		5417FF072F88701A00E87747 /* SearchFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5417FF052F88701A00E87747 /* SearchFilter.swift */; };
 		5417FF092F8870FF00E87747 /* CellFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5417FF082F8870FF00E87747 /* CellFormatter.swift */; };
@@ -75,7 +75,7 @@
 /* Begin PBXFileReference section */
 		5417FEFC2F886DD500E87747 /* Export.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Export.swift; sourceTree = "<group>"; };
 		5417FEFF2F886E5F00E87747 /* TypeFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeFilter.swift; sourceTree = "<group>"; };
-		5417FF022F886F0600E87747 /* ColumnSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnSort.swift; sourceTree = "<group>"; };
+		5417FF022F886F0600E87747 /* SortColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortColumn.swift; sourceTree = "<group>"; };
 		5417FF052F88701A00E87747 /* SearchFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilter.swift; sourceTree = "<group>"; };
 		5417FF082F8870FF00E87747 /* CellFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellFormatter.swift; sourceTree = "<group>"; };
 		547BC7E32F7FC23600A47955 /* QLArchives (debug).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "QLArchives (debug).app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -210,7 +210,7 @@
 				5417FEFC2F886DD500E87747 /* Export.swift */,
 				5417FEFF2F886E5F00E87747 /* TypeFilter.swift */,
 				5417FF052F88701A00E87747 /* SearchFilter.swift */,
-				5417FF022F886F0600E87747 /* ColumnSort.swift */,
+				5417FF022F886F0600E87747 /* SortColumn.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -354,7 +354,7 @@
 				5417FEFE2F886DD500E87747 /* Export.swift in Sources */,
 				547BC8142F7FC4D600A47955 /* AppDelegate.swift in Sources */,
 				54BD948D2F8994CA006A1101 /* Collapsible.swift in Sources */,
-				5417FF042F886F0600E87747 /* ColumnSort.swift in Sources */,
+				5417FF042F886F0600E87747 /* SortColumn.swift in Sources */,
 				54BD94912F8A558B006A1101 /* DataSource.swift in Sources */,
 				5417FF0A2F8870FF00E87747 /* CellFormatter.swift in Sources */,
 				547BC8482F7FC76200A47955 /* ArchiveController.swift in Sources */,
@@ -372,7 +372,7 @@
 			files = (
 				54BD948A2F89948A006A1101 /* ViewMode.swift in Sources */,
 				547BC83C2F7FC50F00A47955 /* PreviewViewController.swift in Sources */,
-				5417FF032F886F0600E87747 /* ColumnSort.swift in Sources */,
+				5417FF032F886F0600E87747 /* SortColumn.swift in Sources */,
 				5417FF062F88701A00E87747 /* SearchFilter.swift in Sources */,
 				5417FEFD2F886DD500E87747 /* Export.swift in Sources */,
 				547BC8462F7FC76200A47955 /* ArchiveController.swift in Sources */,
