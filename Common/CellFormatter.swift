@@ -30,6 +30,9 @@ extension ArchiveController {
 				cell.stringValue = node.name
 				return
 			}
+			if node.isFake {
+				return
+			}
 		}
 		// Archive entry fields
 		guard let obj = rowEntry(item) else {

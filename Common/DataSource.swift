@@ -23,7 +23,7 @@ extension ArchiveController {
 	func rowEntry(_ item: Any) -> ArchiveEntry? {
 		switch viewMode {
 		case .list: (item as? Row)?.entry
-		case .tree: (item as? TreeNode)?.row?.entry
+		case .tree: (item as? TreeNode)?.entry
 		}
 	}
 	
@@ -120,14 +120,12 @@ class TreeNode: HasArchiveEntry, CustomDebugStringConvertible {
 	let name: String
 	private let dirname: String
 	
-	var entry: ArchiveEntry { row?.entry ?? fakeEntry! }
-	var fakeEntry: ArchiveEntry?
-	weak var row: Row? // we could store ArchiveEntry, but that would duplicate data in memory
-
+	let entry: ArchiveEntry
+	let isFake: Bool
 	// cant reuse row search filter bebecause some TreeNodes dont have a row reference
 	var matchSearch: Bool = false
 	
-	init(_ path: String, fakeIndex: UInt? = nil) {
+	init(_ path: String, entry: ArchiveEntry, isFake: Bool = false) {
 		let path = (path as NSString)
 		let dir = path.deletingLastPathComponent
 		// absolute paths
@@ -139,9 +137,8 @@ class TreeNode: HasArchiveEntry, CustomDebugStringConvertible {
 			self.dirname = dir
 		}
 		self.fullpath = dirname.isEmpty ? name : (dirname + "/" + name)
-		if let fakeIndex {
-			fakeEntry = ArchiveEntry(index: fakeIndex, path: fullpath, size: 0, perm: Perm.init(raw: 0), filetype: .Directory, modified: 0)
-		}
+		self.isFake = isFake
+		self.entry = isFake ? ArchiveEntry(index: entry.index, path: fullpath, size: 0, perm: Perm.init(raw: 0), filetype: .Directory, modified: 0) : entry
 	}
 	
 	/// Convert `Row` data structure into `TreeNode` structure while keeping references to `Row`
@@ -149,8 +146,7 @@ class TreeNode: HasArchiveEntry, CustomDebugStringConvertible {
 		var rv: [String: [TreeNode]] = ["": []]
 		// Copy actual entries
 		for row in rows {
-			let newNode = TreeNode(row.entry.path)
-			newNode.row = row
+			let newNode = TreeNode(row.entry.path, entry: row.entry)
 			if rv[newNode.dirname] == nil {
 				rv[newNode.dirname] = []
 			}
@@ -162,12 +158,12 @@ class TreeNode: HasArchiveEntry, CustomDebugStringConvertible {
 			guard !path.isEmpty else {
 				continue
 			}
-			let fakeIndex = rv[path]!.first!.entry.index
-			var fakeNode = TreeNode(path, fakeIndex: fakeIndex)
+			let fakeEntry = rv[path]!.first!.entry
+			var fakeNode = TreeNode(path, entry: fakeEntry, isFake: true)
 			// no parent exists, create all intermediate
 			while rv[fakeNode.dirname] == nil {
 				rv[fakeNode.dirname] = [fakeNode]
-				fakeNode = TreeNode(fakeNode.dirname, fakeIndex: fakeIndex)
+				fakeNode = TreeNode(fakeNode.dirname, entry: fakeEntry, isFake: true)
 			}
 			// a parent exists, insert into existing list
 			if !rv[fakeNode.dirname]!.contains(where: { $0.fullpath == fakeNode.fullpath }) {
