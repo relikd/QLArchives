@@ -22,22 +22,15 @@ extension ArchiveController {
 		guard let cell = cell as? NSCell else {
 			return
 		}
-		// overwrite name column for tree view, in all other cases fall back to archive entry
-		if let node = (item as? TreeNode) {
-			// TODO: should non-archive folders get a folder icon?
-			// TODO: should folder icons be shown in TreeView mode?
-			if tableColumn?.identifier.rawValue == "path" {
-				cell.stringValue = node.name
-				return
-			}
-			if node.isFake {
-				return
-			}
-		}
+		let node = (item as? TreeNode)
+		let fake = node?.isFake == true
 		// Archive entry fields
 		let entry = dataSource.rowEntry(item)
 		switch tableColumn?.identifier {
 		case NSUserInterfaceItemIdentifier(rawValue: "icon"):
+			if fake { break }
+			// TODO: should non-archive folders get a folder icon?
+			// TODO: should folder icons be shown in TreeView mode?
 			switch entry.filetype {
 			case .RegularFile:  cell.image = NSImage(named: "fileTemplate")
 			case .SymbolicLink: cell.image = NSImage(named: "linkTemplate")
@@ -45,12 +38,15 @@ extension ArchiveController {
 			default:            cell.image = nil
 			}
 		case NSUserInterfaceItemIdentifier(rawValue: "path"):
-			cell.stringValue = entry.path
+			cell.stringValue = node?.name ?? entry.path
 		case NSUserInterfaceItemIdentifier(rawValue: "size"):
+			if fake { break }
 			cell.stringValue = Formatter.bytes(entry.size)
 		case NSUserInterfaceItemIdentifier(rawValue: "flag"):
+			if fake { break }
 			cell.stringValue = entry.perm.str
 		case NSUserInterfaceItemIdentifier(rawValue: "date"):
+			if fake { break }
 			cell.stringValue = Formatter.date(entry.modified)
 		default: break
 		}
