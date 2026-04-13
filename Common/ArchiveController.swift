@@ -1,7 +1,7 @@
 import Foundation
 import Cocoa
 
-class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewDataSource {
+class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	
 	@IBOutlet var cfgViewMode: NSSegmentedControl!
 	@IBOutlet var cfgFilter: NSSegmentedControl!

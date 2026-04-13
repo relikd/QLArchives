@@ -10,18 +10,6 @@ extension ArchiveController: NSFilePromiseProviderDelegate {
 		outline.setDraggingSourceOperationMask(.copy, forLocal: false)
 	}
 	
-	/// Called whenever user starts to drag some selected rows.
-	func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> (any NSPasteboardWriting)? {
-		guard let entry = dataSource.rowEntry(item), entry.filetype != .Directory else {
-			// Fake TreeNode entries have `.Directory`.
-			// If that were not the case, we would need to exclude `node.isFake` here
-			return nil
-		}
-		let provider = NSFilePromiseProvider(fileType: "public.data", delegate: self)
-		provider.userInfo = entry
-		return provider
-	}
-	
 	func filePromiseProvider(_ filePromiseProvider: NSFilePromiseProvider, fileNameForType fileType: String) -> String {
 		let entry = filePromiseProvider.userInfo as! ArchiveEntry
 		return String(entry.path.split(separator: "/").last!)
@@ -43,5 +31,30 @@ extension ArchiveController: NSFilePromiseProviderDelegate {
 			alert.runModal()
 			return
 		}
+	}
+}
+
+// Only because `outlineView(_,pasteboardWriterForItem:)` is defined on dataSource
+
+/// Called whenever user starts to drag some selected rows.
+private func _export(_ outlineView: NSOutlineView, _ entry: ArchiveEntry?) -> NSFilePromiseProvider? {
+	guard let entry, entry.filetype != .Directory else {
+		// Fake TreeNode entries have `.Directory`.
+		// If that were not the case, we would need to exclude `node.isFake` here
+		return nil
+	}
+	let provider = NSFilePromiseProvider(fileType: "public.data", delegate: outlineView.delegate as! NSFilePromiseProviderDelegate)
+	provider.userInfo = entry
+	return provider
+}
+
+extension ListViewController {
+	func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> (any NSPasteboardWriting)? {
+		_export(outlineView, rowEntry(item))
+	}
+}
+extension TreeViewController {
+	func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> (any NSPasteboardWriting)? {
+		_export(outlineView, rowEntry(item))
 	}
 }
