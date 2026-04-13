@@ -129,9 +129,15 @@ class TreeNode: HasArchiveEntry, CustomDebugStringConvertible {
 	
 	init(_ path: String, fakeIndex: UInt? = nil) {
 		let path = (path as NSString)
-		self.name = path.lastPathComponent
-		self.dirname = path.deletingLastPathComponent
-		// TODO: check with absolute filenames
+		let dir = path.deletingLastPathComponent
+		// absolute paths
+		if dir == "/" {
+			self.name = "/" + path.lastPathComponent
+			self.dirname = ""
+		} else {
+			self.name = path.lastPathComponent
+			self.dirname = dir
+		}
 		self.fullpath = dirname.isEmpty ? name : (dirname + "/" + name)
 		if let fakeIndex {
 			fakeEntry = ArchiveEntry(index: fakeIndex, path: fullpath, size: 0, perm: Perm.init(raw: 0), filetype: .Directory, modified: 0)
