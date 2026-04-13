@@ -5,24 +5,13 @@ import AppKit
 extension ArchiveController {
 	/// Called when user clicks on a column header.
 	func outlineView(_ outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
-		applySort()
+		dataSource.sortDescriptors = outline.sortDescriptors
 		performFilterAndReload(restoreCollapsible: false) // count doesnt change, only order
 	}
-	
-	/// Does __not__ reload data.
-	func applySort() {
-		switch viewMode {
-		case .list: rows.sort(with: outline.sortDescriptors)
-		case .tree: tree.keys.forEach { tree[$0]!.sort(with: outline.sortDescriptors) }
-		}
-	}
-	
-	/// Restore state when switching between view modes.
-	func toggleRestorableSortState() {
-		let newSort = otherSortDescriptors
-		otherSortDescriptors = outline.sortDescriptors
-		outline.sortDescriptors = newSort
-	}
+}
+
+protocol HasArchiveEntry {
+	var entry: ArchiveEntry { get }
 }
 
 extension Array where Element: HasArchiveEntry {

@@ -10,39 +10,9 @@ extension ArchiveController {
 		let debounce = sender.stringValue.isEmpty ? 0.02 : 0.2
 		debounceTimer?.invalidate()
 		debounceTimer = Timer.scheduledTimer(withTimeInterval: debounce, repeats: false) { [weak self] _ in
-			self?.applySearch()
+			self?.dataSource.searchFilter = sender.stringValue
 			self?.performFilterAndReload()
 		}
-	}
-	
-	/// `true` if search field has content
-	var searchActive: Bool { !searchField.stringValue.isEmpty }
-	
-	/// Does __not__ reload data.
-	func applySearch() {
-		switch viewMode {
-		case .list: applySearchOnList(searchField.stringValue)
-		case .tree: applySearchOnTree(searchField.stringValue)
-		}
-	}
-	
-	/// Set `matchSearch` flag for all matching rows.
-	/// Does __not__ perform the filtering (only prepares for it).
-	private func applySearchOnList(_ searchTerm: String) {
-		if searchActive {
-			rows.forEach { $0.matchSearch = $0.entry.path.contains(searchTerm) }
-		}
-	}
-	
-	/// Set `matchSearch` flag for all matching nodes and their parents.
-	/// Does __not__ perform the filtering (only prepares for it).
-	private func applySearchOnTree(_ searchTerm: String) {
-		guard searchActive else {
-			return
-		}
-		tree.values.forEach { list in list.forEach { node in
-			node.matchSearch = node.name.contains(searchTerm)
-		}}
 	}
 	
 	// MARK: - UI Hotkeys

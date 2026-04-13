@@ -28,12 +28,14 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	var autoExpandOnce: Bool = false
 	/// Used for data export
 	var fileURL: URL? = nil
-	/// Used for List view
-	var rows: [Row] = []
-	var filteredRows: [Row]? = nil
-	/// Used for Tree view `[dir-name: node]`
-	var tree: [String: [TreeNode]] = [:]
-	var filteredTree: [String: [TreeNode]]? = nil
+	
+	// Populated on `load(:)`
+	var dataSourceList: ListViewController!
+	var dataSourceTree: TreeViewController!
+	var dataSource: DataSource {
+		get { outline.dataSource as! DataSource }
+		set { outline.dataSource = newValue }
+	}
 	
 	override var nibName: NSNib.Name? {
 		return NSNib.Name("ArchiveController")
@@ -42,10 +44,9 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	/// Reset all variables to an empty state
 	private func trash() {
 		fileURL = nil
-		rows = []
-		filteredRows = nil
-		tree = [:]
-		filteredTree = nil
+		outline.dataSource = nil
+		dataSourceList = nil
+		dataSourceTree = nil
 		metaInfo.stringValue = ""
 		otherSortDescriptors = []
 		expandedNodes.removeAllObjects()
@@ -65,13 +66,11 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		trash()
 		do {
 			let archive = try LibArchive(url)
-			rows = archive.map { Row(entry: $0) }
+			dataSourceList = ListViewController(archive: archive)
+			dataSourceTree = TreeViewController(rows: dataSourceList.rows)
+			updateDataSource(viewMode)
 			metaInfo.stringValue = archive.metaInfo()
 			fileURL = url
-			initTreeData(isInitial: true) // before sort, depends on `rows`
-			applySort()
-			applyFilter()
-			applySearch()
 			performFilterAndReload(restoreCollapsible: true)
 			return true
 		} catch {

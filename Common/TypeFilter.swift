@@ -37,17 +37,7 @@ extension NSSegmentedControl {
 extension ArchiveController {
 	/// Called when user clicks on any of the type toggles.
 	@IBAction func toggleFilter(_ sender: NSSegmentedControl) {
-		applyFilter()
+		dataSource.filetypeFilter = cfgFilter.selectedTypeFilter
 		performFilterAndReload()
-	}
-	
-	/// `true` if search field has content
-	var filterActive: Bool { cfgFilter.selectedTypeFilter.isOn }
-	
-	/// Does __not__ reload data.
-	func applyFilter() {
-		if let filtr = cfgFilter.selectedTypeFilter.asFiletype() {
-			rows.forEach { $0.matchFilter = filtr.contains($0.entry.filetype) }
-		}
 	}
 }

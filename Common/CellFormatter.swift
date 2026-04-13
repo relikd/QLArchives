@@ -35,7 +35,7 @@ extension ArchiveController {
 			}
 		}
 		// Archive entry fields
-		guard let obj = rowEntry(item) else {
+		guard let obj = dataSource.rowEntry(item) else {
 			return
 		}
 		switch tableColumn?.identifier {

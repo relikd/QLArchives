@@ -12,7 +12,7 @@ extension ArchiveController: NSFilePromiseProviderDelegate {
 	
 	/// Called whenever user starts to drag some selected rows.
 	func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> (any NSPasteboardWriting)? {
-		guard let entry = rowEntry(item), entry.filetype != .Directory else {
+		guard let entry = dataSource.rowEntry(item), entry.filetype != .Directory else {
 			// Fake TreeNode entries have `.Directory`.
 			// If that were not the case, we would need to exclude `node.isFake` here
 			return nil
