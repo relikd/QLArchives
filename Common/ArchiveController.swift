@@ -88,10 +88,10 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 			dataSource = ds
 		} else {
 			switch mode {
-			case .list: dataSource = ListViewController(rawData)
-			case .tree: dataSource = TreeViewController(rawData)
+			case .list: dataSourceMap[mode] = ListViewController(rawData)
+			case .tree: dataSourceMap[mode] = TreeViewController(rawData)
 			}
-			dataSourceMap[mode] = dataSource
+			dataSource = dataSourceMap[mode]!
 		}
 		// each view has its own, separate sort. Restore to reflect in UI
 		outline.sortDescriptors = dataSource.sortDescriptors
