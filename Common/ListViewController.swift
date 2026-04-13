@@ -3,6 +3,7 @@ import AppKit
 class ListViewController: NSObject, DataSource {
 	private var rows: [Row] = []
 	private var filteredRows: [Row]? = nil
+	let collapsibleCount: Int = 0
 	
 	// MARK: - Init
 	

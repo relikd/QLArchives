@@ -16,25 +16,31 @@ extension NSSegmentedControl {
 }
 
 extension ArchiveController {
-	/// View starts with all entries collapsed, so this disables the collapse action (initially).
-	///
-	/// Called in `viewDidLoad`.
+	/// Called in `viewDidLoad`. Later, `load(:)` will call `autoenableAutoExpandButtons`.
 	func initCollapsible() {
-		cfgTreeExpand.set(autoExpandOnce ? .expand : .collapse, enabled: false)
+		cfgTreeExpand.set(.expand, enabled: false)
+		cfgTreeExpand.set(.collapse, enabled: false)
+	}
+	
+	/// Enable or disable Expand All / Collapse All buttons based on curently expanded entries
+	func autoenableAutoExpandButtons() {
+		let current = expandedNodes.count
+		cfgTreeExpand.set(.expand, enabled: current < dataSource.collapsibleCount)
+		cfgTreeExpand.set(.collapse, enabled: current > 0)
 	}
 	
 	// enable the opposite action when at least one row is collapsed
 	// we could perform a search over all items to see if all are collapsed to disable the collapse button
 	// but that would eat unnecessary resources for each click
 	func outlineViewItemDidCollapse(_ notification: Notification) {
-		cfgTreeExpand.set(.expand, enabled: true)
 		expandedNodes.remove(notification.userInfo?["NSObject"] as? TreeNode)
+		autoenableAutoExpandButtons()
 	}
 	
 	// ... same for the other action
 	func outlineViewItemDidExpand(_ notification: Notification) {
-		cfgTreeExpand.set(.collapse, enabled: true)
 		expandedNodes.add(notification.userInfo?["NSObject"] as? TreeNode)
+		autoenableAutoExpandButtons()
 	}
 	
 	/// Restore state when switching between view modes.
@@ -56,13 +62,10 @@ extension ArchiveController {
 	
 	/// Triggers when user clicks expand / collapse button in tree view mode
 	@IBAction func performTreeExpand(_ sender: NSSegmentedControl) {
-		let action = sender.expandAction
-		switch action {
+		switch sender.expandAction {
 		case .expand: outline.expandItem(nil, expandChildren: true)
 		case .collapse: outline.collapseItem(nil, collapseChildren: true)
 		}
-		sender.set(.expand, enabled: action == .collapse)
-		sender.set(.collapse, enabled: action == .expand)
 		// interestingly, expand & collapse children does not trigger new display
 		outline.needsDisplay = true
 	}

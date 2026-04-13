@@ -72,6 +72,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 			metaInfo.stringValue = archive.metaInfo()
 			fileURL = url
 			changeDataSource(viewMode)
+			autoenableAutoExpandButtons()
 			enableSymlinkResolver()
 			return true
 		} catch {

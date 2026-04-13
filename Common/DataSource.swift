@@ -3,6 +3,8 @@ import AppKit
 // Data loading – NSOutlineView data source
 
 protocol DataSource: NSOutlineViewDataSource {
+	/// Total number of all collapsible items.
+	var collapsibleCount: Int { get }
 	/// Applies the sort (upon assignment)
 	var sortDescriptors: [NSSortDescriptor] { get set }
 	/// Set `matchSearch` flag for all matching entries (upon assignment).

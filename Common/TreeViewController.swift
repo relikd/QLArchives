@@ -3,6 +3,7 @@ import AppKit
 class TreeViewController: NSObject, DataSource {
 	private var tree: [String: [TreeNode]] = [:]
 	private var filteredTree: [String: [TreeNode]]? = nil
+	let collapsibleCount: Int
 	
 	// MARK: - Init
 	
@@ -52,6 +53,7 @@ class TreeViewController: NSObject, DataSource {
 			}
 		}
 		tree = rv
+		collapsibleCount = tree.count - 1 // -1 because root node ""
 	}
 	
 	// MARK: - Data Source
