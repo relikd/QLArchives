@@ -89,7 +89,14 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		outline.sortDescriptors = dataSource.sortDescriptors
 		// search is shared for all views
 		dataSource.searchFilter = searchField.stringValue
-		performFilterAndReload(restoreCollapsible: true)
+		performFilterAndReload()
+	}
+	
+	/// Recompute filter and reload outline view.
+	func performFilterAndReload() {
+		dataSource.performFilter()
+		outline.reloadData()
+		restoreCollapsibleState()
 	}
 	
 	// MARK: - Key-Value Observer

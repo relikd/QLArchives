@@ -21,18 +21,3 @@ extension DataSource {
 	/// `true` if any type filter is active. (also `false` if all are active -> no filter needed).
 	var isFiletypeFilterActive: Bool { filetypeFilter?.isOn == true }
 }
-
-
-// MARK: - Perform Filter
-
-extension ArchiveController {
-	/// Recompute filter and reload outline view.
-	func performFilterAndReload(restoreCollapsible: Bool = true) {
-		dataSource.performFilter()
-		outline.reloadData()
-		if restoreCollapsible {
-			restoreCollapsibleState()
-		}
-	}
-}
-
