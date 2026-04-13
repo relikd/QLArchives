@@ -39,6 +39,9 @@ extension ArchiveController {
 			}
 		case NSUserInterfaceItemIdentifier(rawValue: "path"):
 			cell.stringValue = node?.name ?? entry.path
+			if resolveSymlinks, entry.filetype == .SymbolicLink, let symlink = symlinkMap?[entry.index] {
+				cell.stringValue += "  →  " + symlink
+			}
 		case NSUserInterfaceItemIdentifier(rawValue: "size"):
 			if fake { break }
 			cell.stringValue = Formatter.bytes(entry.size)

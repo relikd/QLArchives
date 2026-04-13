@@ -107,6 +107,7 @@ class LibArchive: IteratorProtocol, Sequence {
 	}
 	
 	/// Extract data of a single entry with given `index` into file at `url`.
+	/// Returns `true` if extraction was successful.
 	@discardableResult
 	func extract(_ index: UInt, to url: URL) throws -> Bool {
 		guard skip(index) else {
@@ -149,6 +150,21 @@ class LibArchive: IteratorProtocol, Sequence {
 			try? FileManager.default.setAttributes(attrs, ofItemAtPath: url.path)
 		}
 		return success == ARCHIVE_OK
+	}
+	
+	/// Read all symlinks and store into Hashmap where key is archive index.
+	func symlinks() -> [UInt: String] {
+		var rv: [UInt: String] = [:]
+		var entry: OpaquePointer?
+		var i: UInt = 0
+		while archive_read_next_header(ptr_archive, &entry) == ARCHIVE_OK {
+			if archive_entry_filetype(entry) == Filetype.SymbolicLink.rawValue {
+				rv[i] = String(cString: archive_entry_symlink(entry))
+			}
+			i += 1
+		}
+		self.close()
+		return rv
 	}
 }
 

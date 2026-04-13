@@ -26,6 +26,12 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	/// Used for data export
 	var fileURL: URL? = nil
 	
+	// TODO: GUI option to enable resolver
+	/// Symlink resolving is optional and data is only loaded when needed
+	let resolveSymlinks: Bool = UserDefaults.standard.bool(forKey: "resolveSymlinks")
+	/// Loaded upon first use. Maps `ArchiveEntry.index` to resolved symlink
+	var symlinkMap: [UInt : String]? = nil
+	
 	// Populated on `load(:)`
 	private var rawData: [ArchiveEntry] = []
 	private var dataSourceMap: [ViewMode: DataSource] = [:]
@@ -66,6 +72,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 			metaInfo.stringValue = archive.metaInfo()
 			fileURL = url
 			changeDataSource(viewMode)
+			enableSymlinkResolver()
 			return true
 		} catch {
 			self.view = errorView
@@ -97,6 +104,12 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		dataSource.performFilter()
 		outline.reloadData()
 		restoreCollapsibleState()
+	}
+	
+	func enableSymlinkResolver() {
+		if symlinkMap == nil, resolveSymlinks {
+			symlinkMap = try? LibArchive(fileURL!).symlinks()
+		}
 	}
 	
 	// MARK: - Key-Value Observer
