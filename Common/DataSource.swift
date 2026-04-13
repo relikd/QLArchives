@@ -169,6 +169,24 @@ class TreeNode: HasArchiveEntry, CustomDebugStringConvertible {
 				rv[fakeNode.dirname]!.insertSorted(fakeNode, by: \.entry.index)
 			}
 		}
+		// remove duplicates (e.g. `tar --append`)
+//		let dirsOnly = Set(rv.keys)
+		var dups = Set<String>()
+		rv.keys.forEach { k in
+			dups.removeAll(keepingCapacity: true)
+			// reversed because latter ones overwrite earlier ones
+			for (i, node) in rv[k]!.enumerated().reversed() {
+				// TODO: should we show duplicate files?
+//				guard dirsOnly.contains(node.fullpath) else {
+//					continue // skip files, only de-dup dirs
+//				}
+				if dups.contains(node.fullpath) {
+					rv[k]!.remove(at: i)
+				} else {
+					dups.insert(node.fullpath)
+				}
+			}
+		}
 		return rv
 	}
 	
