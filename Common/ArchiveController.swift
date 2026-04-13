@@ -18,9 +18,6 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	@IBOutlet var errorView: NSView!
 	@IBOutlet var errorText: NSTextField!
 	
-	// Restore state when switching between view modes
-	// current `sortDescriptors` are loaded via Bindings
-	var otherSortDescriptors: [NSSortDescriptor] = []
 	var expandedNodes = NSHashTable<TreeNode>.weakObjects()
 	
 	var viewMode: ViewMode = .list
@@ -30,8 +27,8 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	var fileURL: URL? = nil
 	
 	// Populated on `load(:)`
-	var dataSourceList: ListViewController!
-	var dataSourceTree: TreeViewController!
+	private var rawData: [ArchiveEntry] = []
+	private var dataSourceMap: [ViewMode: DataSource] = [:]
 	var dataSource: DataSource {
 		get { outline.dataSource as! DataSource }
 		set { outline.dataSource = newValue }
@@ -44,11 +41,10 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	/// Reset all variables to an empty state
 	private func trash() {
 		fileURL = nil
+		rawData = []
+		dataSourceMap = [:]
 		outline.dataSource = nil
-		dataSourceList = nil
-		dataSourceTree = nil
 		metaInfo.stringValue = ""
-		otherSortDescriptors = []
 		expandedNodes.removeAllObjects()
 		autoExpandOnce = UserDefaults.standard.bool(forKey: "autoExpand")
 	}
@@ -66,18 +62,34 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		trash()
 		do {
 			let archive = try LibArchive(url)
-			dataSourceList = ListViewController(archive: archive)
-			dataSourceTree = TreeViewController(rows: dataSourceList.rows)
-			updateDataSource(viewMode)
+			rawData = Array(archive)
 			metaInfo.stringValue = archive.metaInfo()
 			fileURL = url
-			performFilterAndReload(restoreCollapsible: true)
+			changeDataSource(viewMode)
 			return true
 		} catch {
 			self.view = errorView
 			errorText.stringValue = "ERROR: " + error.localizedDescription
 			return false
 		}
+	}
+	
+	/// Called on `load(:)` and on view mode change
+	func changeDataSource(_ mode: ViewMode) {
+		if let ds = dataSourceMap[mode] {
+			dataSource = ds
+		} else {
+			switch mode {
+			case .list: dataSource = ListViewController(rawData)
+			case .tree: dataSource = TreeViewController(rawData)
+			}
+			dataSourceMap[mode] = dataSource
+		}
+		// each view has its own, separate sort. Restore to reflect in UI
+		outline.sortDescriptors = dataSource.sortDescriptors
+		// search is shared for all views
+		dataSource.searchFilter = searchField.stringValue
+		performFilterAndReload(restoreCollapsible: true)
 	}
 	
 	// MARK: - Key-Value Observer

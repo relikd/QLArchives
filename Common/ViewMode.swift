@@ -32,19 +32,7 @@ extension ArchiveController {
 	@IBAction func changeViewMode(_ sender: NSSegmentedControl) {
 		viewMode = sender.selectedViewMode
 		setViewModeDependentToolbar()
-		updateDataSource(viewMode)
-		performFilterAndReload()
-	}
-	
-	/// Called on `load(:)` and on view mode change
-	func updateDataSource(_ mode: ViewMode) {
-		switch mode {
-		case .list: dataSource = dataSourceList
-		case .tree: dataSource = dataSourceTree
-		}
-		// initTreeData() // depends on `viewMode`, NO-OP if already loaded
-		outline.sortDescriptors = dataSource.sortDescriptors
-		dataSource.searchFilter = searchField.stringValue // NO-OP if unchanged
+		changeDataSource(viewMode)
 	}
 	
 	/// Switch toolbar depending on current view mode (also called during `viewDidLoad`)

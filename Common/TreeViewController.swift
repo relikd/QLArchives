@@ -1,20 +1,16 @@
 import AppKit
 
 class TreeViewController: NSObject, DataSource {
-	/// Used for Tree view `[dir-name: node]`
 	private var tree: [String: [TreeNode]] = [:]
 	private var filteredTree: [String: [TreeNode]]? = nil
 	
 	// MARK: - Init
 	
-	/// Convert `Row` data structure into `TreeNode` structure.
-	init(rows: [Row], isInitial: Bool = false) {
-		// sorting needed in case an archive entry overrides a previous entry
-		let source = isInitial ? rows : rows.sorted(by: { $0.entry.index < $1.entry.index })
+	init(_ data: [ArchiveEntry]) {
 		var rv: [String: [TreeNode]] = ["": []]
 		// Copy actual entries
-		for row in source {
-			let newNode = TreeNode(row.entry)
+		for entry in data {
+			let newNode = TreeNode(entry)
 			if rv[newNode.dirname] == nil {
 				rv[newNode.dirname] = []
 			}

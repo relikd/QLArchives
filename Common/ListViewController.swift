@@ -1,13 +1,13 @@
 import AppKit
 
 class ListViewController: NSObject, DataSource {
-	var rows: [Row] = []
+	private var rows: [Row] = []
 	private var filteredRows: [Row]? = nil
 	
 	// MARK: - Init
 	
-	init(archive: LibArchive) {
-		rows = archive.map { Row(entry: $0) }
+	init(_ data: [ArchiveEntry]) {
+		rows = data.map { Row(entry: $0) }
 	}
 	
 	// MARK: - Data Source
