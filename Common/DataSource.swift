@@ -153,7 +153,6 @@ class TreeNode: HasArchiveEntry, CustomDebugStringConvertible {
 			rv[newNode.dirname]!.append(newNode)
 		}
 		// Create fake entries (directory nodes which arent present in the archive)
-		var needsSorting = Set<String>()
 		for path in Array(rv.keys) {
 			guard !path.isEmpty else {
 				continue
@@ -167,14 +166,30 @@ class TreeNode: HasArchiveEntry, CustomDebugStringConvertible {
 			}
 			// a parent exists, insert into existing list
 			if !rv[fakeNode.dirname]!.contains(where: { $0.fullpath == fakeNode.fullpath }) {
-				rv[fakeNode.dirname]!.append(fakeNode)
-				needsSorting.insert(fakeNode.dirname)
+				rv[fakeNode.dirname]!.insertSorted(fakeNode, by: \.entry.index)
 			}
 		}
-		// otherwise, fake nodes are always sorted last
-		for path in needsSorting {
-			rv[path]!.sort { $0.entry.index < $1.entry.index }
-		}
 		return rv
+	}
+	
+}
+
+extension RangeReplaceableCollection {
+	/// Binary search insert in already sorted collection.
+	mutating func insertSorted<T: Comparable>(_ value: Element, by predicate: KeyPath<Element, T>) {
+		let needle = value[keyPath: predicate]
+		var slice : SubSequence = self[...]
+		while !slice.isEmpty {
+			let middle = slice.index(
+				slice.startIndex,
+				offsetBy: slice.count / 2
+			)
+			if needle > slice[middle][keyPath: predicate] {
+				slice = slice[index(after: middle)...]
+			} else {
+				slice = slice[..<middle]
+			}
+		}
+		self.insert(value, at: slice.startIndex)
 	}
 }
