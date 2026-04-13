@@ -15,6 +15,8 @@ extension NSSegmentedControl {
 	}
 }
 
+private var debounceTimer: Timer?
+
 extension ArchiveController {
 	/// Called in `viewDidLoad`. Later, `load(:)` will call `autoenableAutoExpandButtons`.
 	func initCollapsible() {
@@ -24,9 +26,12 @@ extension ArchiveController {
 	
 	/// Enable or disable Expand All / Collapse All buttons based on curently expanded entries
 	func autoenableAutoExpandButtons() {
-		let current = expandedNodes.count
-		cfgTreeExpand.set(.expand, enabled: current < dataSource.collapsibleCount)
-		cfgTreeExpand.set(.collapse, enabled: current > 0)
+		debounceTimer?.invalidate()
+		debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false) { [weak self] _ in
+			let current = self?.expandedNodes.count ?? 0
+			self?.cfgTreeExpand.set(.expand, enabled: current < self?.dataSource.collapsibleCount ?? 0)
+			self?.cfgTreeExpand.set(.collapse, enabled: current > 0)
+		}
 	}
 	
 	// enable the opposite action when at least one row is collapsed
