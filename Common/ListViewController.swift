@@ -12,8 +12,8 @@ class ListViewController: NSObject, DataSource {
 	
 	// MARK: - Data Source
 	
-	func rowEntry(_ item: Any) -> ArchiveEntry? {
-		(item as? Row)?.entry
+	func rowEntry(_ item: Any) -> ArchiveEntry {
+		(item as! Row).entry
 	}
 	
 	func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {

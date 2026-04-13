@@ -56,8 +56,8 @@ class TreeViewController: NSObject, DataSource {
 	
 	// MARK: - Data Source
 	
-	func rowEntry(_ item: Any) -> ArchiveEntry? {
-		(item as? TreeNode)?.entry
+	func rowEntry(_ item: Any) -> ArchiveEntry {
+		(item as! TreeNode).entry
 	}
 	
 	func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {

@@ -35,25 +35,23 @@ extension ArchiveController {
 			}
 		}
 		// Archive entry fields
-		guard let obj = dataSource.rowEntry(item) else {
-			return
-		}
+		let entry = dataSource.rowEntry(item)
 		switch tableColumn?.identifier {
 		case NSUserInterfaceItemIdentifier(rawValue: "icon"):
-			switch obj.filetype {
+			switch entry.filetype {
 			case .RegularFile:  cell.image = NSImage(named: "fileTemplate")
 			case .SymbolicLink: cell.image = NSImage(named: "linkTemplate")
 			case .Directory:    cell.image = NSImage(named: NSImage.folderName)
 			default:            cell.image = nil
 			}
 		case NSUserInterfaceItemIdentifier(rawValue: "path"):
-			cell.stringValue = obj.path
+			cell.stringValue = entry.path
 		case NSUserInterfaceItemIdentifier(rawValue: "size"):
-			cell.stringValue = Formatter.bytes(obj.size)
+			cell.stringValue = Formatter.bytes(entry.size)
 		case NSUserInterfaceItemIdentifier(rawValue: "flag"):
-			cell.stringValue = obj.perm.str
+			cell.stringValue = entry.perm.str
 		case NSUserInterfaceItemIdentifier(rawValue: "date"):
-			cell.stringValue = Formatter.date(obj.modified)
+			cell.stringValue = Formatter.date(entry.modified)
 		default: break
 		}
 	}

@@ -37,8 +37,8 @@ extension ArchiveController: NSFilePromiseProviderDelegate {
 // Only because `outlineView(_,pasteboardWriterForItem:)` is defined on dataSource
 
 /// Called whenever user starts to drag some selected rows.
-private func _export(_ outlineView: NSOutlineView, _ entry: ArchiveEntry?) -> NSFilePromiseProvider? {
-	guard let entry, entry.filetype != .Directory else {
+private func _export(_ outlineView: NSOutlineView, _ entry: ArchiveEntry) -> NSFilePromiseProvider? {
+	guard entry.filetype != .Directory else {
 		// Fake TreeNode entries have `.Directory`.
 		// If that were not the case, we would need to exclude `node.isFake` here
 		return nil
