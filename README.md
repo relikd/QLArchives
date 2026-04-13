@@ -10,7 +10,7 @@ QLArchives
 
 QuickLook plugin for archive formats.
 
-![screenshot](./resources/screenshot.png)
+![QuickLook preview window](./resources/screenshot.png)
 
 
 Installation
@@ -34,11 +34,34 @@ Features
 - macOS 10.15+
 - Small app size (2 MB)
 - Customize sort order
+- Filter by filetype
 - Archive support for: `.7z`, `.apk`, `.cab`, `.cdr`, `.cpio`, `.deb`, `.epub`, `.ipsw`, `.iso`, `.jar`, `.lha`, `.pkg`, `.rar`, `.rpm`, `.tar`, `.tar.bz2`, `.tar.gz`, `.tar.lz`, `.tar.xz`, `.tbz`, `.tbz2`, `.tgz`, `.tlz`, `.txz`, `.war`, `.xar`, `.xip`, `.zip`, `.zipx`
 
-Within the companion app:
-- Search / filter files
+### Within the companion app
+- Search for files
 - Extract individual files from archive
+
+![export individual files with drag n drop](./resources/screenshot2.png)
+
+### ToDo List
+- "Extract all" button
+- UI config options for `resolveSymlinks` and `autoExpand`
+
+
+Hidden settings
+---------------
+
+Hopefully replaced by UI settings soon:
+
+```sh
+defaults write de.relikd.QLArchives.preview resolveSymlinks -bool YES
+defaults write de.relikd.QLArchives.preview autoExpand -bool YES
+defaults write de.relikd.QLArchives resolveSymlinks -bool YES
+defaults write de.relikd.QLArchives autoExpand -bool YES
+```
+
+Change config to a) show symlink targets, and b) start tree view with all nodes expanded.
+The `.preview` options are for the QuickLook preview, the latter for the companion app.
 
 
 What it does
