@@ -40,19 +40,9 @@ extension ArchiveController {
 		guard searchActive else {
 			return
 		}
-		for node in tree.iterAll() {
+		tree.values.forEach { list in list.forEach { node in
 			node.matchSearch = node.name.contains(searchTerm)
-		}
-		// In two steps because depth-first evaluates parents first.
-		// Parent value depends on its children and isnt determined yet.
-		for node in tree.iterAll() {
-			// parent guaranteed to exist because root node ("") never has `matchSearch`
-			if node.matchSearch && !node.parent!.matchSearch {
-				for par in node.allParents() {
-					par.matchSearch = true
-				}
-			}
-		}
+		}}
 	}
 	
 	// MARK: - UI Hotkeys

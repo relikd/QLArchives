@@ -47,16 +47,10 @@ extension ArchiveController {
 			autoExpandOnce = false
 			return
 		}
-		// alternatively we could keep the order of expand clicks,
-		// but then the remove operation above would be more complex
-		for node in expandedNodes.allObjects {
-			// if already expanded, we can assume all parents are expanded too
-			if !outline.isItemExpanded(node) {
-				// NSOutlineView cannot expand items if the parent isnt expanded
-				for node in node.allParents().reversed() {
-					outline.expandItem(node)
-				}
-			}
+		// NSOutlineView cannot expand items if the parent isnt expanded
+		// sort assures nested folders appear after their parent folder
+		expandedNodes.allObjects.sorted { $0.fullpath < $1.fullpath }.forEach {
+			outline.expandItem($0)
 		}
 	}
 	

@@ -31,8 +31,9 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 	/// Used for List view
 	var rows: [Row] = []
 	var filteredRows: [Row]? = nil
-	/// Used for Tree view
-	var tree: TreeNode! // will be populated before usage
+	/// Used for Tree view `[dir-name: node]`
+	var tree: [String: [TreeNode]] = [:]
+	var filteredTree: [String: [TreeNode]]? = nil
 	
 	override var nibName: NSNib.Name? {
 		return NSNib.Name("ArchiveController")
@@ -43,7 +44,8 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate, NSOutlineViewD
 		fileURL = nil
 		rows = []
 		filteredRows = nil
-		tree = nil
+		tree = [:]
+		filteredTree = nil
 		metaInfo.stringValue = ""
 		otherSortDescriptors = []
 		expandedNodes.removeAllObjects()

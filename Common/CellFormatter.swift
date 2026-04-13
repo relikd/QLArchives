@@ -19,7 +19,7 @@ extension LibArchive {
 extension ArchiveController {
 	/// Cell display
 	func outlineView(_ outlineView: NSOutlineView, willDisplayCell cell: Any, for tableColumn: NSTableColumn?, item: Any) {
-		guard let cell = cell as? NSCell  else {
+		guard let cell = cell as? NSCell else {
 			return
 		}
 		// overwrite name column for tree view, in all other cases fall back to archive entry

@@ -13,7 +13,7 @@ extension ArchiveController {
 	func applySort() {
 		switch viewMode {
 		case .list: rows.sort(with: outline.sortDescriptors)
-		case .tree: tree.iterAll().forEach { $0.children.sort(with: outline.sortDescriptors) }
+		case .tree: tree.keys.forEach { tree[$0]!.sort(with: outline.sortDescriptors) }
 		}
 	}
 	

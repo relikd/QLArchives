@@ -9,14 +9,14 @@ extension ArchiveController {
 	/// - Depends on `rows` and `viewMode`.
 	/// - Called from `load()` and `changeViewMode()`.
 	func initTreeData(isInitial: Bool = false) {
-		guard tree == nil && viewMode == .tree else {
+		guard tree.isEmpty && viewMode == .tree else {
 			return
 		}
 		if isInitial {
-			tree = TreeNode(rows: rows) // row order unchanged
+			tree = TreeNode.fromRows(rows) // row order unchanged
 		} else {
 			// sorting needed in case an archive entry overrides a previous entry
-			tree = TreeNode(rows: rows.sorted(by: { $0.entry.index < $1.entry.index }))
+			tree = TreeNode.fromRows(rows.sorted(by: { $0.entry.index < $1.entry.index }))
 		}
 	}
 	
@@ -27,29 +27,24 @@ extension ArchiveController {
 		}
 	}
 	
-	@inline(__always)
-	private func _dataSource(_ item: Any?) -> [Any] {
+	func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
 		switch viewMode {
-		case .list:
-			return filteredRows ?? rows
-		case .tree:
-			let node = (item as? TreeNode ?? tree)
-			return node?.filteredChildren ?? node?.children ?? []
+		case .list: (filteredRows ?? rows).count
+		case .tree: (filteredTree ?? tree)[(item as? TreeNode)?.fullpath ?? ""]?.count ?? 0
 		}
 	}
 	
-	func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-		_dataSource(item).count
-	}
-	
 	func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-		_dataSource(item)[index]
+		switch viewMode {
+		case .list: (filteredRows ?? rows)[index]
+		case .tree: (filteredTree ?? tree)[(item as? TreeNode)?.fullpath ?? ""]![index]
+		}
 	}
 	
 	func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
 		switch viewMode {
 		case .list: false
-		case .tree: !(item as! TreeNode).children.isEmpty // expandable doesnt depend on filter
+		case .tree: tree[(item as? TreeNode)?.fullpath ?? ""]?.isEmpty == false // expandable doesnt depend on filter
 		}
 	}
 }
@@ -82,10 +77,17 @@ extension ArchiveController {
 	
 	/// Sets `filteredChildren` for all nodes where some child has `matchSearch` flag set.
 	func performFilterOnTree() {
-		if searchActive {
-			tree.iterAll().forEach { $0.filteredChildren = $0.children.filter(\.matchSearch) }
-		} else if tree.filteredChildren != nil { // sufficient to check root node filter
-			tree.iterAll().forEach { $0.filteredChildren = nil }
+		guard searchActive else {
+			filteredTree = nil
+			return
+		}
+		// Reverse order to populate children first (so they exist for later parents).
+		// Parents must be enabled, if at least one child is active.
+		filteredTree = [:]
+		for path in tree.keys.sorted().reversed() {
+			filteredTree![path] = tree[path]?.filter {
+				$0.matchSearch || filteredTree![$0.fullpath]?.isEmpty == false
+			}
 		}
 	}
 }
@@ -111,71 +113,66 @@ class Row: HasArchiveEntry {
 
 // MARK: - Tree View
 
-class TreeNode: HasArchiveEntry {
-	let name: String
-	weak var row: Row? // we could store ArchiveEntry, but that would duplicate data in memory
-	var children: [TreeNode] = []
-	weak var parent: TreeNode?
+class TreeNode: HasArchiveEntry, CustomDebugStringConvertible {
+	var debugDescription: String { "TreeNode('\(fullpath)')" }
 	
+	let fullpath: String
+	let name: String
+	private let dirname: String
+	
+	var entry: ArchiveEntry { row?.entry ?? fakeEntry! }
+	var fakeEntry: ArchiveEntry?
+	weak var row: Row? // we could store ArchiveEntry, but that would duplicate data in memory
+
 	// cant reuse row search filter bebecause some TreeNodes dont have a row reference
 	var matchSearch: Bool = false
-	var filteredChildren: [TreeNode]? = nil
 	
-	var entry: ArchiveEntry { row?.entry ?? ArchiveEntry(index: 0, path: name, size: 0, perm: Perm.init(raw: 0), filetype: .Directory, modified: 0) }
-	
-	init(name: String = "", parent: TreeNode) {
-		self.name = name
-		self.parent = parent
+	init(_ path: String, fakeIndex: UInt? = nil) {
+		let path = (path as NSString)
+		self.name = path.lastPathComponent
+		self.dirname = path.deletingLastPathComponent
+		// TODO: check with absolute filenames
+		self.fullpath = dirname.isEmpty ? name : (dirname + "/" + name)
+		if let fakeIndex {
+			fakeEntry = ArchiveEntry(index: fakeIndex, path: fullpath, size: 0, perm: Perm.init(raw: 0), filetype: .Directory, modified: 0)
+		}
 	}
 	
 	/// Convert `Row` data structure into `TreeNode` structure while keeping references to `Row`
-	init(rows: [Row]) {
-		self.name = ""
+	static func fromRows(_ rows: [Row]) -> [String: [TreeNode]] {
+		var rv: [String: [TreeNode]] = ["": []]
+		// Copy actual entries
 		for row in rows {
-			var node = self
-			for part in row.entry.path.split(separator: "/") {
-				if let child = node.children.first(where: { $0.name == part }) {
-					node = child
-				} else {
-					let newNode = TreeNode(name: String(part), parent: node)
-					node.children.append(newNode)
-					node = newNode
-				}
+			let newNode = TreeNode(row.entry.path)
+			newNode.row = row
+			if rv[newNode.dirname] == nil {
+				rv[newNode.dirname] = []
 			}
-			node.row = row // auto-updated because referenced
+			rv[newNode.dirname]!.append(newNode)
 		}
-	}
-	
-	/// All parents (including `self`) in reverse order (inner-most child first).
-	func allParents() -> [TreeNode] {
-		var rv: [TreeNode] = [self]
-		while let par = rv.last!.parent {
-			rv.append(par)
+		// Create fake entries (directory nodes which arent present in the archive)
+		var needsSorting = Set<String>()
+		for path in Array(rv.keys) {
+			guard !path.isEmpty else {
+				continue
+			}
+			let fakeIndex = rv[path]!.first!.entry.index
+			var fakeNode = TreeNode(path, fakeIndex: fakeIndex)
+			// no parent exists, create all intermediate
+			while rv[fakeNode.dirname] == nil {
+				rv[fakeNode.dirname] = [fakeNode]
+				fakeNode = TreeNode(fakeNode.dirname, fakeIndex: fakeIndex)
+			}
+			// a parent exists, insert into existing list
+			if !rv[fakeNode.dirname]!.contains(where: { $0.fullpath == fakeNode.fullpath }) {
+				rv[fakeNode.dirname]!.append(fakeNode)
+				needsSorting.insert(fakeNode.dirname)
+			}
+		}
+		// otherwise, fake nodes are always sorted last
+		for path in needsSorting {
+			rv[path]!.sort { $0.entry.index < $1.entry.index }
 		}
 		return rv
-	}
-	
-	/// Depth-first and last-to-first.
-	func iterAll() -> TreeNodeIterator {
-		return TreeNodeIterator(self)
-	}
-}
-
-/// Reuse pattern for TreeNode iteration.
-struct TreeNodeIterator: IteratorProtocol, Sequence {
-	typealias Element = TreeNode
-	
-	private var queue: [TreeNode]
-	
-	init(_ root: TreeNode) {
-		self.queue = [root]
-	}
-	
-	mutating func next() -> TreeNode? {
-		guard let node = queue.popLast() else {
-			return nil
-		}
-		queue.append(contentsOf: node.children)
-		return node
 	}
 }
