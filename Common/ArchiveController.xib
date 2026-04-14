@@ -17,9 +17,6 @@
                 <outlet property="metaInfo" destination="Svc-Z2-wpl" id="X0m-FD-GPp"/>
                 <outlet property="outline" destination="yTC-jh-ZQv" id="h3N-pO-u1m"/>
                 <outlet property="searchField" destination="aQ2-Ve-Sd1" id="rYN-xp-VXc"/>
-                <outlet property="toolbarListView" destination="Htd-Rz-zOe" id="Gkf-2G-o9h"/>
-                <outlet property="toolbarPlaceholder" destination="cTm-bD-I2E" id="0kx-9l-ze3"/>
-                <outlet property="toolbarTreeView" destination="3cG-UY-RGC" id="Xn7-16-fPi"/>
                 <outlet property="view" destination="F40-zz-e3Q" id="ave-yB-76I"/>
             </connections>
         </customObject>
@@ -29,86 +26,6 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="7gY-e0-z00" userLabel="Header">
-                    <rect key="frame" x="0.0" y="328" width="480" height="32"/>
-                    <subviews>
-                        <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cn7-av-gir" userLabel="View Style">
-                            <rect key="frame" x="6" y="4" width="65" height="24"/>
-                            <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="mEt-Bn-sgs">
-                                <font key="font" metaFont="system"/>
-                                <segments>
-                                    <segment toolTip="List view" image="NSListViewTemplate" width="28" selected="YES"/>
-                                    <segment toolTip="Tree view" image="NSPathTemplate" width="28" tag="1"/>
-                                </segments>
-                            </segmentedCell>
-                            <connections>
-                                <action selector="changeViewMode:" target="-2" id="LND-fb-1Mb"/>
-                                <binding destination="Maf-Wa-Yhe" name="selectedIndex" keyPath="values.viewStyle" id="18D-gn-q2D">
-                                    <dictionary key="options">
-                                        <integer key="NSNotApplicablePlaceholder" value="0"/>
-                                        <integer key="NSNullPlaceholder" value="0"/>
-                                    </dictionary>
-                                </binding>
-                            </connections>
-                        </segmentedControl>
-                        <customView identifier="tools-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="cTm-bD-I2E" userLabel="Tools">
-                            <rect key="frame" x="77" y="0.0" width="72" height="32"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="72" placeholder="YES" id="E0X-Eb-FqB"/>
-                            </constraints>
-                        </customView>
-                        <searchField toolTip="Find entries (⌘F)" focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1">
-                            <rect key="frame" x="157" y="5" width="212" height="22"/>
-                            <constraints>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="26" id="BgJ-zN-Mx8"/>
-                            </constraints>
-                            <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" id="K2e-UB-ToX">
-                                <font key="font" metaFont="system"/>
-                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                            </searchFieldCell>
-                            <connections>
-                                <action selector="didSearch:" target="-2" id="iKb-U0-byH"/>
-                            </connections>
-                        </searchField>
-                        <textField clipsToBounds="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Svc-Z2-wpl" userLabel="Meta Info">
-                            <rect key="frame" x="375" y="8" width="57" height="16"/>
-                            <textFieldCell key="cell" selectable="YES" title="42 items" usesSingleLineMode="YES" id="Uux-eV-JGS">
-                                <font key="font" metaFont="system"/>
-                                <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                            </textFieldCell>
-                        </textField>
-                        <button toolTip="Extract all (⌘E)" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ACU-xi-bcO" userLabel="Extract All Button">
-                            <rect key="frame" x="431" y="-1" width="48" height="32"/>
-                            <buttonCell key="cell" type="push" bezelStyle="rounded" image="exportTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="osl-ZE-Mr2">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
-                                <string key="keyEquivalent">e</string>
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </buttonCell>
-                            <connections>
-                                <action selector="exportAll:" target="-2" id="eYn-ds-cUV"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                    <constraints>
-                        <constraint firstItem="Svc-Z2-wpl" firstAttribute="centerY" secondItem="7gY-e0-z00" secondAttribute="centerY" id="DJV-iS-0d1"/>
-                        <constraint firstItem="cTm-bD-I2E" firstAttribute="leading" secondItem="cn7-av-gir" secondAttribute="trailing" constant="8" symbolic="YES" id="DXY-BN-eqz"/>
-                        <constraint firstItem="cTm-bD-I2E" firstAttribute="top" secondItem="7gY-e0-z00" secondAttribute="top" id="OJM-um-AVo"/>
-                        <constraint firstItem="ACU-xi-bcO" firstAttribute="leading" secondItem="Svc-Z2-wpl" secondAttribute="trailing" constant="8" symbolic="YES" id="P8h-DP-bAR"/>
-                        <constraint firstItem="aQ2-Ve-Sd1" firstAttribute="leading" secondItem="cTm-bD-I2E" secondAttribute="trailing" constant="8" symbolic="YES" id="Pmo-dP-2Zy"/>
-                        <constraint firstItem="cn7-av-gir" firstAttribute="leading" secondItem="7gY-e0-z00" secondAttribute="leading" constant="8" id="SWl-2E-xaS"/>
-                        <constraint firstItem="cn7-av-gir" firstAttribute="centerY" secondItem="7gY-e0-z00" secondAttribute="centerY" id="ZhW-Vy-DFY"/>
-                        <constraint firstItem="ACU-xi-bcO" firstAttribute="centerY" secondItem="7gY-e0-z00" secondAttribute="centerY" id="ZoN-ny-HYJ"/>
-                        <constraint firstAttribute="trailing" secondItem="ACU-xi-bcO" secondAttribute="trailing" constant="8" id="kcw-gp-LIt"/>
-                        <constraint firstAttribute="trailing" secondItem="Svc-Z2-wpl" secondAttribute="trailing" priority="250" constant="8" id="kdP-sg-w2Y"/>
-                        <constraint firstAttribute="bottom" secondItem="cTm-bD-I2E" secondAttribute="bottom" id="rfj-b9-MXm"/>
-                        <constraint firstItem="Svc-Z2-wpl" firstAttribute="leading" secondItem="aQ2-Ve-Sd1" secondAttribute="trailing" constant="8" symbolic="YES" id="s8Y-ZU-sW0"/>
-                        <constraint firstAttribute="height" constant="32" id="t9t-dR-tWa"/>
-                        <constraint firstItem="aQ2-Ve-Sd1" firstAttribute="centerY" secondItem="7gY-e0-z00" secondAttribute="centerY" id="xPe-VI-Keb"/>
-                    </constraints>
-                </customView>
                 <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" findBarPosition="aboveHorizontalRuler" translatesAutoresizingMaskIntoConstraints="NO" id="I4L-hr-trd">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="328"/>
                     <clipView key="contentView" drawsBackground="NO" id="2qM-FY-fGW">
@@ -191,7 +108,7 @@
                         <nil key="backgroundColor"/>
                     </clipView>
                     <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="TP0-DL-HDg">
-                        <rect key="frame" x="0.0" y="249" width="0.0" height="16"/>
+                        <rect key="frame" x="0.0" y="312" width="480" height="16"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="sp0-e7-MiR">
@@ -203,14 +120,118 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </tableHeaderView>
                 </scrollView>
+                <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eGU-eq-0rG">
+                    <rect key="frame" x="8" y="328" width="464" height="32"/>
+                    <subviews>
+                        <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cn7-av-gir" userLabel="View Mode">
+                            <rect key="frame" x="-2" y="4" width="114" height="24"/>
+                            <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="mEt-Bn-sgs">
+                                <font key="font" metaFont="system"/>
+                                <segments>
+                                    <segment toolTip="List view" image="NSListViewTemplate" selected="YES"/>
+                                    <segment toolTip="Tree view" image="NSPathTemplate" tag="1"/>
+                                </segments>
+                            </segmentedCell>
+                            <connections>
+                                <action selector="changeViewMode:" target="-2" id="LND-fb-1Mb"/>
+                                <binding destination="Maf-Wa-Yhe" name="selectedIndex" keyPath="values.viewStyle" id="18D-gn-q2D">
+                                    <dictionary key="options">
+                                        <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                        <integer key="NSNullPlaceholder" value="0"/>
+                                    </dictionary>
+                                </binding>
+                            </connections>
+                        </segmentedControl>
+                        <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9tW-e7-MsK" userLabel="AutoExpand">
+                            <rect key="frame" x="115" y="4" width="59" height="24"/>
+                            <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="momentary" id="y2M-Je-byg">
+                                <font key="font" metaFont="system"/>
+                                <segments>
+                                    <segment image="NSTouchBarEnterFullScreenTemplate"/>
+                                    <segment image="NSTouchBarExitFullScreenTemplate" tag="1"/>
+                                </segments>
+                            </segmentedCell>
+                            <connections>
+                                <action selector="performTreeExpand:" target="-2" id="Nxd-L9-WwD"/>
+                            </connections>
+                        </segmentedControl>
+                        <segmentedControl verticalHuggingPriority="750" mirrorLayoutDirectionWhenInternationalizing="never" translatesAutoresizingMaskIntoConstraints="NO" id="qMM-TH-HUw" userLabel="Type Filter">
+                            <rect key="frame" x="178" y="6" width="82" height="20"/>
+                            <segmentedCell key="cell" alignment="left" style="roundRect" trackingMode="selectAny" id="el0-2b-9q6">
+                                <font key="font" metaFont="cellTitle"/>
+                                <segments>
+                                    <segment toolTip="Show directories" image="dirTemplate" width="24" tag="1"/>
+                                    <segment toolTip="Show files" image="fileTemplate" width="24" tag="2"/>
+                                    <segment toolTip="Show symlinks" image="linkTemplate" width="24" tag="4"/>
+                                </segments>
+                            </segmentedCell>
+                            <connections>
+                                <action selector="toggleFilter:" target="-2" id="wyL-d9-c3b"/>
+                            </connections>
+                        </segmentedControl>
+                        <searchField toolTip="Find entries (⌘F)" focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1" userLabel="Search">
+                            <rect key="frame" x="267" y="5" width="94" height="22"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="26" id="BgJ-zN-Mx8"/>
+                            </constraints>
+                            <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" id="K2e-UB-ToX">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </searchFieldCell>
+                            <connections>
+                                <action selector="didSearch:" target="-2" id="iKb-U0-byH"/>
+                            </connections>
+                        </searchField>
+                        <textField clipsToBounds="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Svc-Z2-wpl" userLabel="Meta Info">
+                            <rect key="frame" x="367" y="8" width="57" height="16"/>
+                            <textFieldCell key="cell" selectable="YES" title="42 items" usesSingleLineMode="YES" id="Uux-eV-JGS">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <button toolTip="Extract all (⌘E)" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ACU-xi-bcO" userLabel="Extract All">
+                            <rect key="frame" x="423" y="-1" width="48" height="32"/>
+                            <buttonCell key="cell" type="push" bezelStyle="rounded" image="exportTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="osl-ZE-Mr2">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                                <string key="keyEquivalent">e</string>
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="exportAll:" target="-2" id="eYn-ds-cUV"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="5Hy-Kn-cBv"/>
+                    </constraints>
+                    <visibilityPriorities>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                    </visibilityPriorities>
+                    <customSpacing>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                    </customSpacing>
+                </stackView>
             </subviews>
             <constraints>
-                <constraint firstItem="7gY-e0-z00" firstAttribute="top" secondItem="F40-zz-e3Q" secondAttribute="top" id="4Lb-8k-doa"/>
-                <constraint firstAttribute="trailing" secondItem="7gY-e0-z00" secondAttribute="trailing" id="EtB-VR-IN8"/>
-                <constraint firstItem="I4L-hr-trd" firstAttribute="top" secondItem="7gY-e0-z00" secondAttribute="bottom" id="FSn-rk-HW2"/>
+                <constraint firstItem="eGU-eq-0rG" firstAttribute="top" secondItem="F40-zz-e3Q" secondAttribute="top" id="7GA-82-MzL"/>
                 <constraint firstItem="I4L-hr-trd" firstAttribute="leading" secondItem="F40-zz-e3Q" secondAttribute="leading" id="Vcx-SW-w9M"/>
-                <constraint firstItem="7gY-e0-z00" firstAttribute="leading" secondItem="F40-zz-e3Q" secondAttribute="leading" id="WcB-gS-JhI"/>
+                <constraint firstAttribute="trailing" secondItem="eGU-eq-0rG" secondAttribute="trailing" constant="8" id="XZQ-Y5-Srj"/>
+                <constraint firstItem="eGU-eq-0rG" firstAttribute="leading" secondItem="F40-zz-e3Q" secondAttribute="leading" constant="8" id="bGJ-Qt-Z1b"/>
                 <constraint firstAttribute="bottom" secondItem="I4L-hr-trd" secondAttribute="bottom" id="oos-jZ-mIR"/>
+                <constraint firstItem="I4L-hr-trd" firstAttribute="top" secondItem="eGU-eq-0rG" secondAttribute="bottom" id="pXj-RL-ESR"/>
                 <constraint firstAttribute="trailing" secondItem="I4L-hr-trd" secondAttribute="trailing" id="uer-ja-KDi"/>
             </constraints>
             <point key="canvasLocation" x="51" y="-227"/>
@@ -237,57 +258,6 @@
             <point key="canvasLocation" x="-158.5" y="123"/>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="Maf-Wa-Yhe"/>
-        <customView identifier="tools-list" id="Htd-Rz-zOe" userLabel="Tools for List">
-            <rect key="frame" x="0.0" y="0.0" width="80" height="70"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <subviews>
-                <segmentedControl verticalHuggingPriority="750" mirrorLayoutDirectionWhenInternationalizing="never" translatesAutoresizingMaskIntoConstraints="NO" id="qMM-TH-HUw" userLabel="Type Filter">
-                    <rect key="frame" x="-1" y="25" width="82" height="20"/>
-                    <segmentedCell key="cell" alignment="left" style="roundRect" trackingMode="selectAny" id="el0-2b-9q6">
-                        <font key="font" metaFont="cellTitle"/>
-                        <segments>
-                            <segment toolTip="Show directories" image="dirTemplate" width="24" tag="1"/>
-                            <segment toolTip="Show files" image="fileTemplate" width="24" tag="2"/>
-                            <segment toolTip="Show symlinks" image="linkTemplate" width="24" tag="4"/>
-                        </segments>
-                    </segmentedCell>
-                    <connections>
-                        <action selector="toggleFilter:" target="-2" id="wyL-d9-c3b"/>
-                    </connections>
-                </segmentedControl>
-            </subviews>
-            <constraints>
-                <constraint firstAttribute="trailing" secondItem="qMM-TH-HUw" secondAttribute="trailing" id="Qgz-T8-DsS"/>
-                <constraint firstItem="qMM-TH-HUw" firstAttribute="centerY" secondItem="Htd-Rz-zOe" secondAttribute="centerY" id="WXS-a7-gmb"/>
-                <constraint firstItem="qMM-TH-HUw" firstAttribute="leading" secondItem="Htd-Rz-zOe" secondAttribute="leading" id="deM-uW-Xcz"/>
-            </constraints>
-            <point key="canvasLocation" x="-149" y="-506"/>
-        </customView>
-        <customView identifier="tools-tree" id="3cG-UY-RGC" userLabel="Tools for Tree">
-            <rect key="frame" x="0.0" y="0.0" width="57" height="70"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <subviews>
-                <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9tW-e7-MsK">
-                    <rect key="frame" x="-3" y="23" width="63" height="24"/>
-                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="momentary" id="y2M-Je-byg">
-                        <font key="font" metaFont="system"/>
-                        <segments>
-                            <segment image="NSTouchBarEnterFullScreenTemplate" width="28"/>
-                            <segment image="NSTouchBarExitFullScreenTemplate" width="28" tag="1"/>
-                        </segments>
-                    </segmentedCell>
-                    <connections>
-                        <action selector="performTreeExpand:" target="-2" id="Nxd-L9-WwD"/>
-                    </connections>
-                </segmentedControl>
-            </subviews>
-            <constraints>
-                <constraint firstItem="9tW-e7-MsK" firstAttribute="leading" secondItem="3cG-UY-RGC" secondAttribute="leading" id="8co-yB-6D9"/>
-                <constraint firstAttribute="trailing" secondItem="9tW-e7-MsK" secondAttribute="trailing" id="fKb-eg-DY5"/>
-                <constraint firstItem="9tW-e7-MsK" firstAttribute="centerY" secondItem="3cG-UY-RGC" secondAttribute="centerY" id="rHh-mH-R80"/>
-            </constraints>
-            <point key="canvasLocation" x="-10.5" y="-506"/>
-        </customView>
     </objects>
     <resources>
         <image name="NSCaution" width="32" height="32"/>

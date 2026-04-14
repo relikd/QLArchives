@@ -10,10 +10,6 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	@IBOutlet var metaInfo: NSTextField!
 	@IBOutlet var btnExtractAll: NSButton!
 	
-	@IBOutlet var toolbarPlaceholder: NSView!
-	@IBOutlet var toolbarListView: NSView!
-	@IBOutlet var toolbarTreeView: NSView!
-	
 	@IBOutlet var outline: NSOutlineView!
 	
 	@IBOutlet var errorView: NSView!
@@ -59,7 +55,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	/// Called (once) before `load(:)`
 	override func viewDidLoad() {
 		trash()
-		initViewMode()
+		viewMode = cfgViewMode.selectedViewMode
 		initCollapsible()
 		initExport()
 	}
@@ -99,6 +95,9 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		dataSource.searchFilter = searchField.stringValue
 		performFilterAndReload()
 		autoenableAutoExpandButtons()
+		/// Switch toolbar depending on current view mode
+		cfgTreeExpand.isHidden = viewMode != .tree
+		cfgFilter.isHidden = viewMode != .list
 	}
 	
 	/// Recompute filter and reload outline view.
