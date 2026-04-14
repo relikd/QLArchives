@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ArchiveController" customModule="QLArchives" customModuleProvider="target">
             <connections>
+                <outlet property="btnExtractAll" destination="ACU-xi-bcO" id="5Vc-iU-dRm"/>
                 <outlet property="cfgFilter" destination="qMM-TH-HUw" id="MN9-sd-N2k"/>
                 <outlet property="cfgTreeExpand" destination="9tW-e7-MsK" id="1Gm-nC-Bha"/>
                 <outlet property="cfgViewMode" destination="cn7-av-gir" id="mIL-cR-sn1"/>
@@ -56,8 +57,8 @@
                                 <constraint firstAttribute="width" constant="72" placeholder="YES" id="E0X-Eb-FqB"/>
                             </constraints>
                         </customView>
-                        <searchField focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1">
-                            <rect key="frame" x="157" y="5" width="254" height="22"/>
+                        <searchField toolTip="Find entries (⌘F)" focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1">
+                            <rect key="frame" x="157" y="5" width="212" height="22"/>
                             <constraints>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="26" id="BgJ-zN-Mx8"/>
                             </constraints>
@@ -71,22 +72,37 @@
                             </connections>
                         </searchField>
                         <textField clipsToBounds="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Svc-Z2-wpl" userLabel="Meta Info">
-                            <rect key="frame" x="417" y="8" width="57" height="16"/>
+                            <rect key="frame" x="375" y="8" width="57" height="16"/>
                             <textFieldCell key="cell" selectable="YES" title="42 items" usesSingleLineMode="YES" id="Uux-eV-JGS">
                                 <font key="font" metaFont="system"/>
                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                         </textField>
+                        <button toolTip="Extract all (⌘E)" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ACU-xi-bcO" userLabel="Extract All Button">
+                            <rect key="frame" x="431" y="-1" width="48" height="32"/>
+                            <buttonCell key="cell" type="push" bezelStyle="rounded" image="exportTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="osl-ZE-Mr2">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                                <string key="keyEquivalent">e</string>
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="exportAll:" target="-2" id="eYn-ds-cUV"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <constraints>
                         <constraint firstItem="Svc-Z2-wpl" firstAttribute="centerY" secondItem="7gY-e0-z00" secondAttribute="centerY" id="DJV-iS-0d1"/>
                         <constraint firstItem="cTm-bD-I2E" firstAttribute="leading" secondItem="cn7-av-gir" secondAttribute="trailing" constant="8" symbolic="YES" id="DXY-BN-eqz"/>
                         <constraint firstItem="cTm-bD-I2E" firstAttribute="top" secondItem="7gY-e0-z00" secondAttribute="top" id="OJM-um-AVo"/>
-                        <constraint firstAttribute="trailing" secondItem="Svc-Z2-wpl" secondAttribute="trailing" constant="8" id="P8h-DP-bAR"/>
+                        <constraint firstItem="ACU-xi-bcO" firstAttribute="leading" secondItem="Svc-Z2-wpl" secondAttribute="trailing" constant="8" symbolic="YES" id="P8h-DP-bAR"/>
                         <constraint firstItem="aQ2-Ve-Sd1" firstAttribute="leading" secondItem="cTm-bD-I2E" secondAttribute="trailing" constant="8" symbolic="YES" id="Pmo-dP-2Zy"/>
                         <constraint firstItem="cn7-av-gir" firstAttribute="leading" secondItem="7gY-e0-z00" secondAttribute="leading" constant="8" id="SWl-2E-xaS"/>
                         <constraint firstItem="cn7-av-gir" firstAttribute="centerY" secondItem="7gY-e0-z00" secondAttribute="centerY" id="ZhW-Vy-DFY"/>
+                        <constraint firstItem="ACU-xi-bcO" firstAttribute="centerY" secondItem="7gY-e0-z00" secondAttribute="centerY" id="ZoN-ny-HYJ"/>
+                        <constraint firstAttribute="trailing" secondItem="ACU-xi-bcO" secondAttribute="trailing" constant="8" id="kcw-gp-LIt"/>
+                        <constraint firstAttribute="trailing" secondItem="Svc-Z2-wpl" secondAttribute="trailing" priority="250" constant="8" id="kdP-sg-w2Y"/>
                         <constraint firstAttribute="bottom" secondItem="cTm-bD-I2E" secondAttribute="bottom" id="rfj-b9-MXm"/>
                         <constraint firstItem="Svc-Z2-wpl" firstAttribute="leading" secondItem="aQ2-Ve-Sd1" secondAttribute="trailing" constant="8" symbolic="YES" id="s8Y-ZU-sW0"/>
                         <constraint firstAttribute="height" constant="32" id="t9t-dR-tWa"/>
@@ -226,9 +242,9 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <segmentedControl verticalHuggingPriority="750" mirrorLayoutDirectionWhenInternationalizing="never" translatesAutoresizingMaskIntoConstraints="NO" id="qMM-TH-HUw" userLabel="Type Filter">
-                    <rect key="frame" x="0.0" y="24" width="80" height="23"/>
-                    <segmentedCell key="cell" alignment="left" style="smallSquare" trackingMode="selectAny" id="el0-2b-9q6">
-                        <font key="font" metaFont="system"/>
+                    <rect key="frame" x="-1" y="25" width="82" height="20"/>
+                    <segmentedCell key="cell" alignment="left" style="roundRect" trackingMode="selectAny" id="el0-2b-9q6">
+                        <font key="font" metaFont="cellTitle"/>
                         <segments>
                             <segment toolTip="Show directories" image="dirTemplate" width="24" tag="1"/>
                             <segment toolTip="Show files" image="fileTemplate" width="24" tag="2"/>
@@ -279,8 +295,9 @@
         <image name="NSPathTemplate" width="25" height="15"/>
         <image name="NSTouchBarEnterFullScreenTemplate" width="20" height="19"/>
         <image name="NSTouchBarExitFullScreenTemplate" width="20" height="20"/>
-        <image name="dirTemplate" width="16" height="16"/>
-        <image name="fileTemplate" width="30" height="30"/>
-        <image name="linkTemplate" width="30" height="30"/>
+        <image name="dirTemplate" width="25" height="25"/>
+        <image name="exportTemplate" width="25" height="25"/>
+        <image name="fileTemplate" width="25" height="25"/>
+        <image name="linkTemplate" width="25" height="25"/>
     </resources>
 </document>

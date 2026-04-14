@@ -8,6 +8,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	@IBOutlet var cfgTreeExpand: NSSegmentedControl!
 	@IBOutlet var searchField: NSSearchField!
 	@IBOutlet var metaInfo: NSTextField!
+	@IBOutlet var btnExtractAll: NSButton!
 	
 	@IBOutlet var toolbarPlaceholder: NSView!
 	@IBOutlet var toolbarListView: NSView!

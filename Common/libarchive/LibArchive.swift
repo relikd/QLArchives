@@ -152,6 +152,55 @@ class LibArchive: IteratorProtocol, Sequence {
 		return success == ARCHIVE_OK
 	}
 	
+	/// Replicate full archive structure on disk
+	func extractAll() throws {
+		let flags = ARCHIVE_EXTRACT_TIME | ARCHIVE_EXTRACT_PERM | ARCHIVE_EXTRACT_ACL | ARCHIVE_EXTRACT_FFLAGS
+		let ext = archive_write_disk_new()
+		archive_write_disk_set_options(ext, flags)
+		archive_write_disk_set_standard_lookup(ext)
+		defer {
+			close()
+			archive_write_close(ext)
+			archive_write_free(ext)
+		}
+		var entry: OpaquePointer?
+		while true {
+			switch archive_read_next_header(ptr_archive, &entry) {
+			case ARCHIVE_EOF: return
+			case ..<ARCHIVE_WARN: throw LibArchiveError.generic(String(cString: archive_error_string(ptr_archive)))
+			default: break
+			}
+			// write
+			if (archive_write_header(ext, entry) == ARCHIVE_OK) {
+				if (archive_entry_size(entry) > 0) {
+					try _copy_data(ptr_archive, ext)
+				}
+				if archive_write_finish_entry(ext) < ARCHIVE_WARN {
+					throw LibArchiveError.generic(String(cString: archive_error_string(ptr_archive)))
+				}
+			}
+		}
+	}
+	
+	/// Copies data from one archive to another.
+	@discardableResult
+	private func _copy_data(_ ar: OpaquePointer?, _ aw: OpaquePointer?) throws -> Bool {
+		var buff: UnsafeRawPointer? = nil
+		var size: size_t = 0
+		var offset: la_int64_t = 0
+		while true {
+			switch archive_read_data_block(ar, &buff, &size, &offset) {
+			case ARCHIVE_EOF: return true
+			case ..<ARCHIVE_WARN: throw LibArchiveError.generic(String(cString: archive_error_string(ar)))
+			case ..<ARCHIVE_OK: return false
+			default: break
+			}
+			if archive_write_data_block(aw, buff, size, offset) < ARCHIVE_OK {
+				throw LibArchiveError.generic(String(cString: archive_error_string(aw)))
+			}
+		}
+	}
+	
 	/// Read all symlinks and store into Hashmap where key is archive index.
 	func symlinks() -> [UInt: String] {
 		var rv: [UInt: String] = [:]

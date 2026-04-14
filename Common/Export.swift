@@ -2,6 +2,8 @@ import AppKit
 
 // Allow user to export individual files via drag & drop
 
+// MARK: - Export Individual
+
 extension ArchiveController: NSFilePromiseProviderDelegate {
 	/// Enable drag & drop operation on outline view.
 	///
@@ -25,10 +27,7 @@ extension ArchiveController: NSFilePromiseProviderDelegate {
 			completionHandler(nil)
 		} catch {
 			completionHandler(error)
-			let alert = NSAlert()
-			alert.alertStyle = .critical
-			alert.messageText = error.localizedDescription
-			alert.runModal()
+			NSAlert.error(error)
 			return
 		}
 	}
@@ -57,4 +56,74 @@ extension TreeViewController {
 	func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> (any NSPasteboardWriting)? {
 		_export(outlineView, rowEntry(item))
 	}
+}
+
+
+// MARK: - NSAlert
+
+extension NSAlert {
+	/// Show modal error popup with style `.critical` and message `.localizedDescription`.
+	static func error(_ error: Error) {
+		let alert = NSAlert()
+		alert.alertStyle = .critical
+		alert.messageText = "Error"
+		alert.informativeText = error.localizedDescription
+		alert.runModal()
+	}
+}
+
+
+// MARK: - Export All
+
+extension ArchiveController: NSOpenSavePanelDelegate {
+	@IBAction func exportAll(_ sender: NSButton) {
+		guard let archive_url = self.fileURL else {
+			return
+		}
+		let panel = NSOpenPanel()
+		panel.title = "Extract all"
+		panel.canChooseDirectories = true
+		panel.canCreateDirectories = true
+		panel.treatsFilePackagesAsDirectories = true
+		panel.canChooseFiles = false
+		panel.allowsMultipleSelection = false
+		panel.directoryURL = archive_url.deletingLastPathComponent()
+		panel.prompt = "Extract"
+		panel.begin {
+			if $0 == .OK {
+				do {
+					try exportToPath(archive_url, panel.url!)
+				} catch {
+					NSAlert.error(error)
+				}
+			}
+		}
+		// TODO: I'd like to use `runModal()` but that puts Sandbox limitations on subpaths
+	}
+}
+
+private func exportToPath(_ infile: URL, _ outdir: URL) throws {
+	let fm = FileManager.default
+	// restore previous CWD in any case
+	let prev = fm.currentDirectoryPath
+	defer {
+		fm.changeCurrentDirectoryPath(prev)
+	}
+	// set CWD to user selected path
+	guard fm.changeCurrentDirectoryPath(outdir.path) else {
+		throw LibArchiveError.generic("Could not open directory for extract")
+	}
+	// find first available dirname
+	var filename = infile.deletingPathExtension().lastPathComponent
+	if fm.fileExists(atPath: filename),
+	   let i = (2...999).first(where: { !fm.fileExists(atPath: filename + " (\($0))") }) {
+		filename += " (\(i))"
+	}
+	// create subdir with name of archive and cd into
+	try fm.createDirectory(atPath: filename, withIntermediateDirectories: false)
+	guard fm.changeCurrentDirectoryPath(filename) else {
+		throw LibArchiveError.generic("Could not open directory for extract")
+	}
+	// actual export
+	try LibArchive(infile).extractAll()
 }
