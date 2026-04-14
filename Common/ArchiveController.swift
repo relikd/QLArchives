@@ -73,7 +73,6 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 			metaInfo.stringValue = archive.metaInfo()
 			fileURL = url
 			changeDataSource(viewMode)
-			autoenableAutoExpandButtons()
 			enableSymlinkResolver()
 			return true
 		} catch {
@@ -99,6 +98,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		// search is shared for all views
 		dataSource.searchFilter = searchField.stringValue
 		performFilterAndReload()
+		autoenableAutoExpandButtons()
 	}
 	
 	/// Recompute filter and reload outline view.
