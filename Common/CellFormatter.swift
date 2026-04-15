@@ -34,8 +34,8 @@ extension ArchiveController {
 			// TODO: should non-archive folders get a folder icon?
 			// TODO: should folder icons be shown in TreeView mode?
 			switch entry.filetype {
-			case .RegularFile:  cell.image = NSImage(named: "fileTemplate")
-			case .SymbolicLink: cell.image = NSImage(named: "linkTemplate")
+			case .RegularFile:  cell.image = NSImage.file
+			case .SymbolicLink: cell.image = NSImage.link
 			case .Directory:    cell.image = NSImage(named: NSImage.folderName)
 			default:            cell.image = nil
 			}

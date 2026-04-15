@@ -19,6 +19,7 @@ Fixed:
 - Initial enabled state for auto-expand buttons
 - Crash on broken symlinks
 - `Cmd+F` search if focus was on meta info
+- Icon & layout issues on macOS 10.15
 
 
 ## [1.2.0] – 2026-04-14
