@@ -47,7 +47,7 @@ class ListViewController: NSObject, DataSource {
 	
 	// MARK: - Filter
 	
-	var filetypeFilter: TypeFilter? = nil {
+	var filetypeFilter: FiletypeFilter? = nil {
 		willSet {
 			if let filtr = newValue?.asFiletype() {
 				rows.forEach { $0.matchFiletype = filtr.contains($0.entry.filetype) }

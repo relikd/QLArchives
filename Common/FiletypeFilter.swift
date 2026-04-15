@@ -2,7 +2,7 @@ import AppKit
 
 // Allow user to filter rows by selecting specific types (directory, file, link)
 
-struct TypeFilter: OptionSet {
+struct FiletypeFilter: OptionSet {
 	let rawValue: Int
 	
 	static let folder = Self(rawValue: 1)
@@ -27,8 +27,8 @@ struct TypeFilter: OptionSet {
 
 // All components must have tag > 0 + tags must be bitwise exclusive
 extension NSSegmentedControl {
-	var selectedTypeFilter: TypeFilter {
-		TypeFilter(rawValue: (0..<self.segmentCount).reduce(0) {
+	var selectedTypeFilter: FiletypeFilter {
+		FiletypeFilter(rawValue: (0..<self.segmentCount).reduce(0) {
 			$0 + (self.isSelected(forSegment: $1) ? self.tag(forSegment: $1) : 0)
 		})
 	}

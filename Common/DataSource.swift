@@ -10,7 +10,7 @@ protocol DataSource: NSOutlineViewDataSource {
 	/// Set `matchSearch` flag for all matching entries (upon assignment).
 	var searchFilter: String { get set }
 	/// Set `matchFiletype` flag for all matching entries (upon assignment).
-	var filetypeFilter: TypeFilter? { get set }
+	var filetypeFilter: FiletypeFilter? { get set }
 	/// Retrieve actual data from data source structure
 	func rowEntry(_ item: Any) -> ArchiveEntry
 	/// Perform actually filter. This create a layer view on the data which hides non-matchig files

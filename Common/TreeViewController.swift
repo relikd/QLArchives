@@ -94,7 +94,7 @@ class TreeViewController: NSObject, DataSource {
 	
 	// MARK: - Filter
 	
-	var filetypeFilter: TypeFilter? = nil // ignored
+	var filetypeFilter: FiletypeFilter? = nil // ignored
 	
 	/// Sets `filteredChildren` for all nodes where some child has `matchSearch` flag set.
 	func performFilter() {
