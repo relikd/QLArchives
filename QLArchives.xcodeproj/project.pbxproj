@@ -44,8 +44,6 @@
 		54B9D9CE2F883A3F00EA6856 /* linkTemplate.svg in Resources */ = {isa = PBXBuildFile; fileRef = 54B9D9C92F883A3F00EA6856 /* linkTemplate.svg */; };
 		54B9D9CF2F883A3F00EA6856 /* dirTemplate.svg in Resources */ = {isa = PBXBuildFile; fileRef = 54B9D9C82F883A3F00EA6856 /* dirTemplate.svg */; };
 		54B9D9D02F883A3F00EA6856 /* fileTemplate.svg in Resources */ = {isa = PBXBuildFile; fileRef = 54B9D9C72F883A3F00EA6856 /* fileTemplate.svg */; };
-		54BC929B2F8E70A700BF64D1 /* exportTemplate.svg in Resources */ = {isa = PBXBuildFile; fileRef = 54BC92992F8E70A700BF64D1 /* exportTemplate.svg */; };
-		54BC929D2F8E70A700BF64D1 /* exportTemplate.svg in Resources */ = {isa = PBXBuildFile; fileRef = 54BC92992F8E70A700BF64D1 /* exportTemplate.svg */; };
 		54BD948A2F89948A006A1101 /* ViewMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54BD94892F89948A006A1101 /* ViewMode.swift */; };
 		54BD948B2F89948A006A1101 /* ViewMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54BD94892F89948A006A1101 /* ViewMode.swift */; };
 		54BD948D2F8994CA006A1101 /* Collapsible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54BD948C2F8994CA006A1101 /* Collapsible.swift */; };
@@ -112,7 +110,6 @@
 		54B9D9C72F883A3F00EA6856 /* fileTemplate.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = fileTemplate.svg; sourceTree = "<group>"; };
 		54B9D9C82F883A3F00EA6856 /* dirTemplate.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = dirTemplate.svg; sourceTree = "<group>"; };
 		54B9D9C92F883A3F00EA6856 /* linkTemplate.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = linkTemplate.svg; sourceTree = "<group>"; };
-		54BC92992F8E70A700BF64D1 /* exportTemplate.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = exportTemplate.svg; sourceTree = "<group>"; };
 		54BD94892F89948A006A1101 /* ViewMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewMode.swift; sourceTree = "<group>"; };
 		54BD948C2F8994CA006A1101 /* Collapsible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collapsible.swift; sourceTree = "<group>"; };
 		54BD948F2F8A558B006A1101 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
@@ -241,7 +238,6 @@
 				54B9D9C72F883A3F00EA6856 /* fileTemplate.svg */,
 				54B9D9C82F883A3F00EA6856 /* dirTemplate.svg */,
 				54B9D9C92F883A3F00EA6856 /* linkTemplate.svg */,
-				54BC92992F8E70A700BF64D1 /* exportTemplate.svg */,
 			);
 			path = icons;
 			sourceTree = "<group>";
@@ -339,7 +335,6 @@
 				54B9D9D02F883A3F00EA6856 /* fileTemplate.svg in Resources */,
 				547BC8572F804C3500A47955 /* AppIcon.icns in Resources */,
 				547BC84A2F7FC76200A47955 /* ArchiveController.xib in Resources */,
-				54BC929B2F8E70A700BF64D1 /* exportTemplate.svg in Resources */,
 				547BC8172F7FC4D600A47955 /* Document.xib in Resources */,
 				547BC8192F7FC4D600A47955 /* MainMenu.xib in Resources */,
 			);
@@ -350,7 +345,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				547BC83A2F7FC50F00A47955 /* PreviewViewController.xib in Resources */,
-				54BC929D2F8E70A700BF64D1 /* exportTemplate.svg in Resources */,
 				547BC8452F7FC76200A47955 /* ArchiveController.xib in Resources */,
 				54B9D9CB2F883A3F00EA6856 /* linkTemplate.svg in Resources */,
 				54B9D9CC2F883A3F00EA6856 /* dirTemplate.svg in Resources */,
