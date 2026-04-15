@@ -35,6 +35,13 @@ class ListViewController: NSObject, DataSource {
 		willSet { rows.sort(with: newValue) }
 	}
 	
+	/// Called when user clicks on a column header.
+	func outlineView(_ outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
+		sortDescriptors = outlineView.sortDescriptors
+		performFilter()
+		outlineView.reloadData()
+	}
+	
 	// MARK: - Search
 	
 	var searchFilter: String = "" {

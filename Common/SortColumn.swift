@@ -2,25 +2,6 @@ import AppKit
 
 // Allow user to sort rows by clicking on a column header
 
-extension DataSource {
-	/// Called when user clicks on a column header.
-	fileprivate func _didSort(_ outlineView: NSOutlineView) {
-		sortDescriptors = outlineView.sortDescriptors
-		performFilter()
-		outlineView.reloadData()
-	}
-}
-extension ListViewController {
-	func outlineView(_ outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
-		_didSort(outlineView)
-	}
-}
-extension TreeViewController {
-	func outlineView(_ outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
-		_didSort(outlineView)
-	}
-}
-
 protocol HasArchiveEntry {
 	var entry: ArchiveEntry { get }
 }

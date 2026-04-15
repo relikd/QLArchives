@@ -80,6 +80,13 @@ class TreeViewController: NSObject, DataSource {
 		willSet { tree.keys.forEach { tree[$0]!.sort(with: newValue) } }
 	}
 	
+	/// Called when user clicks on a column header.
+	func outlineView(_ outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
+		sortDescriptors = outlineView.sortDescriptors
+		performFilter()
+		outlineView.reloadData()
+	}
+	
 	// MARK: - Search
 	
 	var searchFilter: String = "" {
