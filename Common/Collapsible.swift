@@ -2,19 +2,6 @@ import AppKit
 
 // Allow user to expand and collapse tree structure
 
-enum ExpandAction {
-	case expand, collapse
-}
-
-extension NSSegmentedControl {
-	var expandAction: ExpandAction {
-		self.selectedSegment == 1 ? .collapse : .expand
-	}
-	func set(_ action: ExpandAction, enabled: Bool) {
-		setEnabled(enabled, forSegment: action == .collapse ? 1 : 0)
-	}
-}
-
 private var debounceTimer: Timer?
 
 extension ArchiveController {
@@ -63,15 +50,5 @@ extension ArchiveController {
 		expandedNodes.allObjects.sorted { $0.fullpath < $1.fullpath }.forEach {
 			outline.expandItem($0)
 		}
-	}
-	
-	/// Triggers when user clicks expand / collapse button in tree view mode
-	@IBAction func performTreeExpand(_ sender: NSSegmentedControl) {
-		switch sender.expandAction {
-		case .expand: outline.expandItem(nil, expandChildren: true)
-		case .collapse: outline.collapseItem(nil, collapseChildren: true)
-		}
-		// interestingly, expand & collapse children does not trigger new display
-		outline.needsDisplay = true
 	}
 }

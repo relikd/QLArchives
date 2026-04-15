@@ -75,31 +75,29 @@ extension NSAlert {
 
 // MARK: - Extract All
 
-extension ArchiveController: NSOpenSavePanelDelegate {
-	@IBAction func extractAll(_ sender: NSMenuItem) {
-		guard let archive_url = self.fileURL else {
-			return
-		}
-		let panel = NSOpenPanel()
-		panel.title = "Extract all"
-		panel.canChooseDirectories = true
-		panel.canCreateDirectories = true
-		panel.treatsFilePackagesAsDirectories = true
-		panel.canChooseFiles = false
-		panel.allowsMultipleSelection = false
-		panel.directoryURL = archive_url.deletingLastPathComponent()
-		panel.prompt = "Extract"
-		panel.begin {
-			if $0 == .OK {
-				do {
-					try extractToPath(archive_url, panel.url!)
-				} catch {
-					NSAlert.error(error)
-				}
+/// Show `NSOpenPanel` and let user select target directory.
+/// Libarchive will extract all content to this directory.
+/// (actually a subdirectory with the name of the archive)
+func showExtractAllDialog(_ archiveFile: URL) {
+	let panel = NSOpenPanel()
+	panel.title = "Extract all"
+	panel.canChooseDirectories = true
+	panel.canCreateDirectories = true
+	panel.treatsFilePackagesAsDirectories = true
+	panel.canChooseFiles = false
+	panel.allowsMultipleSelection = false
+	panel.directoryURL = archiveFile.deletingLastPathComponent()
+	panel.prompt = "Extract"
+	panel.begin {
+		if $0 == .OK {
+			do {
+				try extractToPath(archiveFile, panel.url!)
+			} catch {
+				NSAlert.error(error)
 			}
 		}
-		// TODO: I'd like to use `runModal()` but that puts Sandbox limitations on subpaths
 	}
+	// TODO: I'd like to use `runModal()` but that puts Sandbox limitations on subpaths
 }
 
 private func extractToPath(_ infile: URL, _ outdir: URL) throws {

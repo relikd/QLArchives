@@ -1,6 +1,40 @@
 import AppKit
 
-// Allow user to filter rows by selecting specific types (directory, file, link)
+// Extensions on Segmented Control
+
+// MARK: - View Mode
+
+enum ViewMode {
+	case list, tree
+}
+
+extension NSSegmentedControl {
+	var selectedViewMode: ViewMode {
+		self.selectedSegment == 1 ? .tree : .list
+	}
+	func select(_ viewMode: ViewMode) {
+		self.setSelected(true, forSegment: viewMode == .tree ? 1 : 0)
+	}
+}
+
+
+// MARK: - Expand Nodes
+
+enum ExpandAction {
+	case expand, collapse
+}
+
+extension NSSegmentedControl {
+	var expandAction: ExpandAction {
+		self.selectedSegment == 1 ? .collapse : .expand
+	}
+	func set(_ action: ExpandAction, enabled: Bool) {
+		setEnabled(enabled, forSegment: action == .collapse ? 1 : 0)
+	}
+}
+
+
+// MARK: - Filetype Filter
 
 struct FiletypeFilter: OptionSet {
 	let rawValue: Int
@@ -31,13 +65,5 @@ extension NSSegmentedControl {
 		FiletypeFilter(rawValue: (0..<self.segmentCount).reduce(0) {
 			$0 + (self.isSelected(forSegment: $1) ? self.tag(forSegment: $1) : 0)
 		})
-	}
-}
-
-extension ArchiveController {
-	/// Called when user clicks on any of the type toggles.
-	@IBAction func toggleFilter(_ sender: NSSegmentedControl) {
-		dataSource.filetypeFilter = cfgFilter.selectedTypeFilter
-		performFilterAndReload()
 	}
 }

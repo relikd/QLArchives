@@ -122,16 +122,4 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		outline.reloadData()
 		restoreCollapsibleState()
 	}
-	
-	// MARK: - Key-Value Observer
-	
-	private var kvo: NSKeyValueObservation?
-	
-	override func viewWillAppear() {
-		kvo = registerViewModeChanges()
-	}
-	
-	override func viewDidDisappear() {
-		kvo?.invalidate()
-	}
 }

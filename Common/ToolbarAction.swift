@@ -1,32 +1,51 @@
 import AppKit
 
-// Allow user to switch between view modes List View and Tree View
+// User interaction via actions toolbar / actions menu
 
-enum ViewMode {
-	case list, tree
-}
-
-extension NSSegmentedControl {
-	var selectedViewMode: ViewMode {
-		self.selectedSegment == 1 ? .tree : .list
-	}
-	func select(_ viewMode: ViewMode) {
-		self.setSelected(true, forSegment: viewMode == .tree ? 1 : 0)
-	}
-}
+private var debounceTimer: Timer?
 
 extension ArchiveController {
-	/// Triggered by mode changes in another document window
-	func registerViewModeChanges() -> NSKeyValueObservation {
-		cfgViewMode.observe(\.selectedSegment) { [weak self] control, _ in
-			self?.changeViewMode(control)
-		}
-	}
+	// MARK: - Toolbar Actions
 	
 	/// Triggers when user changes view mode
 	@IBAction func changeViewMode(_ sender: NSSegmentedControl) {
 		viewMode = sender.selectedViewMode
 		changeDataSource(viewMode)
+	}
+	
+	/// Triggers when user clicks expand / collapse button in tree view mode
+	@IBAction func performTreeExpand(_ sender: NSSegmentedControl) {
+		switch sender.expandAction {
+		case .expand: outline.expandItem(nil, expandChildren: true)
+		case .collapse: outline.collapseItem(nil, collapseChildren: true)
+		}
+		// interestingly, expand & collapse children does not trigger new display
+		outline.needsDisplay = true
+	}
+	
+	/// Called when user clicks on any of the type toggles.
+	@IBAction func toggleFilter(_ sender: NSSegmentedControl) {
+		dataSource.filetypeFilter = cfgFilter.selectedTypeFilter
+		performFilterAndReload()
+	}
+	
+	/// Called whenever user starts typing in the search field.
+	@IBAction func didSearch(_ sender: NSSearchField) {
+		let debounce = sender.stringValue.isEmpty ? 0.02 : 0.2
+		debounceTimer?.invalidate()
+		debounceTimer = Timer.scheduledTimer(withTimeInterval: debounce, repeats: false) { [weak self] _ in
+			self?.dataSource.searchFilter = sender.stringValue
+			self?.performFilterAndReload()
+		}
+	}
+	
+	// MARK: - Action Menu
+	
+	/// Triggered on action menu or `Cmd + E`
+	@IBAction func extractAll(_ sender: NSMenuItem) {
+		if let archive_url = self.fileURL {
+			showExtractAllDialog(archive_url)
+		}
 	}
 	
 	/// Triggered on action menu as well as default settings toggle.
@@ -52,6 +71,8 @@ extension ArchiveController {
 		}
 	}
 	
+	// MARK: - Settings Popover
+	
 	/// Open settings popover under settings button.
 	@IBAction func openSettings(_ sender: NSButton) {
 		let panel = NSPopover()
@@ -60,4 +81,21 @@ extension ArchiveController {
 		panel.behavior = .transient
 		panel.show(relativeTo: .zero, of: sender, preferredEdge: .maxY)
 	}
+	
+	// MARK: - UI Hotkeys
+	
+	/// allow `Cmd + F` to search
+	override func keyDown(with event: NSEvent) {
+		if event.characters == "f", event.modifierFlags.contains(.command), !searchField.isHidden {
+			searchField.becomeFirstResponder()
+		} else {
+			super.keyDown(with: event)
+		}
+	}
+	
+	/// allow `ESC` inside search field / any NSView
+	override func cancelOperation(_ sender: Any?) {
+		self.view.window?.performSelector(onMainThread: #selector(NSWindow.makeFirstResponder(_:)), with: self.outline, waitUntilDone: false)
+	}
 }
+
