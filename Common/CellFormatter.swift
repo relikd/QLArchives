@@ -2,6 +2,8 @@ import AppKit
 
 // Code to display cells and formatted meta info
 
+// TODO: disable Spelling & Grammar menu item on editing path cell (but how??)
+
 extension LibArchive {
 	/// Generate info text for archive meta data (entry count, compression ratio, etc.)
 	/// @Note Only valid after all entries have been processed.

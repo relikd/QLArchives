@@ -122,4 +122,14 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		outline.reloadData()
 		restoreCollapsibleState()
 	}
+	
+	// Dont focus search field (initially)
+	
+	override func viewWillAppear() {
+		searchField.refusesFirstResponder = true
+	}
+	
+	override func viewDidAppear() {
+		searchField.refusesFirstResponder = false
+	}
 }
