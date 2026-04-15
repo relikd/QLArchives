@@ -150,23 +150,3 @@ class TreeNode: HasArchiveEntry, CustomDebugStringConvertible {
 		self.entry = isFake ? ArchiveEntry(index: entry.index, path: fullpath, size: 0, perm: Perm.init(raw: 0), filetype: .Directory, modified: 0) : entry
 	}
 }
-
-extension RangeReplaceableCollection {
-	/// Binary search insert in already sorted collection.
-	mutating func insertSorted<T: Comparable>(_ value: Element, by predicate: KeyPath<Element, T>) {
-		let needle = value[keyPath: predicate]
-		var slice : SubSequence = self[...]
-		while !slice.isEmpty {
-			let middle = slice.index(
-				slice.startIndex,
-				offsetBy: slice.count / 2
-			)
-			if needle > slice[middle][keyPath: predicate] {
-				slice = slice[index(after: middle)...]
-			} else {
-				slice = slice[..<middle]
-			}
-		}
-		self.insert(value, at: slice.startIndex)
-	}
-}

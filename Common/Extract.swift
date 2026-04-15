@@ -58,21 +58,6 @@ extension TreeViewController {
 	}
 }
 
-
-// MARK: - NSAlert
-
-extension NSAlert {
-	/// Show modal error popup with style `.critical` and message `.localizedDescription`.
-	static func error(_ error: Error) {
-		let alert = NSAlert()
-		alert.alertStyle = .critical
-		alert.messageText = "Error"
-		alert.informativeText = error.localizedDescription
-		alert.runModal()
-	}
-}
-
-
 // MARK: - Extract All
 
 /// Show `NSOpenPanel` and let user select target directory.

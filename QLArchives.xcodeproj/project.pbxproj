@@ -42,6 +42,8 @@
 		54B9D9CE2F883A3F00EA6856 /* linkTemplate.svg in Resources */ = {isa = PBXBuildFile; fileRef = 54B9D9C92F883A3F00EA6856 /* linkTemplate.svg */; };
 		54B9D9CF2F883A3F00EA6856 /* dirTemplate.svg in Resources */ = {isa = PBXBuildFile; fileRef = 54B9D9C82F883A3F00EA6856 /* dirTemplate.svg */; };
 		54B9D9D02F883A3F00EA6856 /* fileTemplate.svg in Resources */ = {isa = PBXBuildFile; fileRef = 54B9D9C72F883A3F00EA6856 /* fileTemplate.svg */; };
+		54BC92A52F8F330A00BF64D1 /* Generic+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54BC92A42F8F330A00BF64D1 /* Generic+Extensions.swift */; };
+		54BC92A62F8F330A00BF64D1 /* Generic+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54BC92A42F8F330A00BF64D1 /* Generic+Extensions.swift */; };
 		54BD948A2F89948A006A1101 /* ToolbarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54BD94892F89948A006A1101 /* ToolbarAction.swift */; };
 		54BD948B2F89948A006A1101 /* ToolbarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54BD94892F89948A006A1101 /* ToolbarAction.swift */; };
 		54BD948D2F8994CA006A1101 /* Collapsible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54BD948C2F8994CA006A1101 /* Collapsible.swift */; };
@@ -107,6 +109,7 @@
 		54B9D9C72F883A3F00EA6856 /* fileTemplate.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = fileTemplate.svg; sourceTree = "<group>"; };
 		54B9D9C82F883A3F00EA6856 /* dirTemplate.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = dirTemplate.svg; sourceTree = "<group>"; };
 		54B9D9C92F883A3F00EA6856 /* linkTemplate.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = linkTemplate.svg; sourceTree = "<group>"; };
+		54BC92A42F8F330A00BF64D1 /* Generic+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Generic+Extensions.swift"; sourceTree = "<group>"; };
 		54BD94892F89948A006A1101 /* ToolbarAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarAction.swift; sourceTree = "<group>"; };
 		54BD948C2F8994CA006A1101 /* Collapsible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collapsible.swift; sourceTree = "<group>"; };
 		54BD948F2F8A558B006A1101 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
@@ -211,6 +214,7 @@
 				545BA1252F8D168C00189053 /* TreeViewController.swift */,
 				5417FF082F8870FF00E87747 /* CellFormatter.swift */,
 				54BD94892F89948A006A1101 /* ToolbarAction.swift */,
+				54BC92A42F8F330A00BF64D1 /* Generic+Extensions.swift */,
 				5417FEFF2F886E5F00E87747 /* SegmentControl+Extension.swift */,
 				54BD948C2F8994CA006A1101 /* Collapsible.swift */,
 				5417FEFC2F886DD500E87747 /* Extract.swift */,
@@ -364,6 +368,7 @@
 				545BA12A2F8D172A00189053 /* ListViewController.swift in Sources */,
 				547BC8482F7FC76200A47955 /* ArchiveController.swift in Sources */,
 				545BA1272F8D168C00189053 /* TreeViewController.swift in Sources */,
+				54BC92A52F8F330A00BF64D1 /* Generic+Extensions.swift in Sources */,
 				547BC8492F7FC76200A47955 /* LibArchive.swift in Sources */,
 				547BC8152F7FC4D600A47955 /* Document.swift in Sources */,
 				5417FF012F886E5F00E87747 /* SegmentControl+Extension.swift in Sources */,
@@ -385,6 +390,7 @@
 				5417FF092F8870FF00E87747 /* CellFormatter.swift in Sources */,
 				5417FF002F886E5F00E87747 /* SegmentControl+Extension.swift in Sources */,
 				545BA1262F8D168C00189053 /* TreeViewController.swift in Sources */,
+				54BC92A62F8F330A00BF64D1 /* Generic+Extensions.swift in Sources */,
 				545BA1292F8D172A00189053 /* ListViewController.swift in Sources */,
 				54BD948E2F8994CA006A1101 /* Collapsible.swift in Sources */,
 			);
