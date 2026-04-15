@@ -1,14 +1,14 @@
 import AppKit
 
-// Allow user to export individual files via drag & drop
+// Allow user to extract files via drag & drop (and action button)
 
-// MARK: - Export Individual
+// MARK: - Extract Individual
 
 extension ArchiveController: NSFilePromiseProviderDelegate {
 	/// Enable drag & drop operation on outline view.
 	///
 	/// Called in `viewDidLoad`.
-	func initExport() {
+	func initExtract() {
 		outline.setDraggingSourceOperationMask(.copy, forLocal: false)
 	}
 	
@@ -36,7 +36,7 @@ extension ArchiveController: NSFilePromiseProviderDelegate {
 // Only because `outlineView(_,pasteboardWriterForItem:)` is defined on dataSource
 
 /// Called whenever user starts to drag some selected rows.
-private func _export(_ outlineView: NSOutlineView, _ entry: ArchiveEntry) -> NSFilePromiseProvider? {
+private func _extract(_ outlineView: NSOutlineView, _ entry: ArchiveEntry) -> NSFilePromiseProvider? {
 	guard entry.filetype != .Directory else {
 		// Fake TreeNode entries have `.Directory`.
 		// If that were not the case, we would need to exclude `node.isFake` here
@@ -49,12 +49,12 @@ private func _export(_ outlineView: NSOutlineView, _ entry: ArchiveEntry) -> NSF
 
 extension ListViewController {
 	func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> (any NSPasteboardWriting)? {
-		_export(outlineView, rowEntry(item))
+		_extract(outlineView, rowEntry(item))
 	}
 }
 extension TreeViewController {
 	func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> (any NSPasteboardWriting)? {
-		_export(outlineView, rowEntry(item))
+		_extract(outlineView, rowEntry(item))
 	}
 }
 
@@ -73,7 +73,7 @@ extension NSAlert {
 }
 
 
-// MARK: - Export All
+// MARK: - Extract All
 
 extension ArchiveController: NSOpenSavePanelDelegate {
 	@IBAction func extractAll(_ sender: NSMenuItem) {
@@ -92,7 +92,7 @@ extension ArchiveController: NSOpenSavePanelDelegate {
 		panel.begin {
 			if $0 == .OK {
 				do {
-					try exportToPath(archive_url, panel.url!)
+					try extractToPath(archive_url, panel.url!)
 				} catch {
 					NSAlert.error(error)
 				}
@@ -102,7 +102,7 @@ extension ArchiveController: NSOpenSavePanelDelegate {
 	}
 }
 
-private func exportToPath(_ infile: URL, _ outdir: URL) throws {
+private func extractToPath(_ infile: URL, _ outdir: URL) throws {
 	let fm = FileManager.default
 	// restore previous CWD in any case
 	let prev = fm.currentDirectoryPath

@@ -41,7 +41,7 @@ Features
 - Search for files
 - Extract individual files from archive
 
-![export individual files with drag n drop](./resources/screenshot2.png)
+![extract individual files with drag n drop](./resources/screenshot2.png)
 
 ### ToDo List
 - "Extract all" button

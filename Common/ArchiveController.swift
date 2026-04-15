@@ -31,7 +31,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	var viewMode: ViewMode = .list
 	/// `true` if user has set user-defaults. Reset on `load(:)`
 	var autoExpandOnce: Bool = false
-	/// Used for data export
+	/// Used for data extract and symlink map
 	var fileURL: URL? = nil
 	/// Loaded upon first use. Maps `ArchiveEntry.index` to resolved symlink
 	var symlinkMap: [UInt : String]? = nil
@@ -71,7 +71,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	override func viewDidLoad() {
 		trash()
 		initCollapsible()
-		initExport()
+		initExtract()
 	}
 	
 	/// Can be called multiple times

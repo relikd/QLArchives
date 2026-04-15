@@ -17,7 +17,7 @@ Changed:
 
 ## [1.1.1] – 2026-04-08
 Fixed:
-- Crash on macOS 10.15 on file export
+- Crash on macOS 10.15 on file extract
 
 
 ## [1.1.0] – 2026-04-08
