@@ -76,7 +76,7 @@ extension NSAlert {
 // MARK: - Export All
 
 extension ArchiveController: NSOpenSavePanelDelegate {
-	@IBAction func exportAll(_ sender: NSButton) {
+	@IBAction func extractAll(_ sender: NSMenuItem) {
 		guard let archive_url = self.fileURL else {
 			return
 		}

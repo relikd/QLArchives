@@ -2,16 +2,27 @@ import Foundation
 import Cocoa
 
 class ArchiveController: NSViewController, NSOutlineViewDelegate {
-	
+	// Action toolbar
 	@IBOutlet var cfgViewMode: NSSegmentedControl!
 	@IBOutlet var cfgFilter: NSSegmentedControl!
 	@IBOutlet var cfgTreeExpand: NSSegmentedControl!
 	@IBOutlet var searchField: NSSearchField!
 	@IBOutlet var metaInfo: NSTextField!
-	@IBOutlet var btnExtractAll: NSButton!
 	
+	// Action button menu
+	@IBOutlet var menuExtractAll: NSMenuItem!
+	@IBOutlet var menuResolveSymlinks: NSMenuItem!
+	
+	// Settings popup
+	@IBOutlet var settingsContainer: NSView!
+	@IBOutlet var settingsDefaultView: NSSegmentedControl!
+	@IBOutlet var settingsAutoExpand: NSSwitch!
+	@IBOutlet var settingsResolveSymlink: NSSwitch!
+	
+	// Main content
 	@IBOutlet var outline: NSOutlineView!
 	
+	// Error view
 	@IBOutlet var errorView: NSView!
 	@IBOutlet var errorText: NSTextField!
 	
@@ -22,12 +33,10 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	var autoExpandOnce: Bool = false
 	/// Used for data export
 	var fileURL: URL? = nil
-	
-	// TODO: GUI option to enable resolver
-	/// Symlink resolving is optional and data is only loaded when needed
-	let resolveSymlinks: Bool = UserDefaults.standard.bool(forKey: "resolveSymlinks")
 	/// Loaded upon first use. Maps `ArchiveEntry.index` to resolved symlink
 	var symlinkMap: [UInt : String]? = nil
+	/// Symlink resolving is optional and data is only loaded when needed
+	var resolveSymlinks: Bool = false
 	
 	// Populated on `load(:)`
 	private var rawData: [ArchiveEntry] = []
@@ -46,16 +55,21 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		fileURL = nil
 		rawData = []
 		dataSourceMap = [:]
+		symlinkMap = nil
 		outline.dataSource = nil
 		metaInfo.stringValue = ""
 		expandedNodes.removeAllObjects()
-		autoExpandOnce = UserDefaults.standard.bool(forKey: "autoExpand")
+		// load user settings
+		viewMode = settingsDefaultView.selectedViewMode
+		cfgViewMode.select(viewMode)
+		autoExpandOnce = settingsAutoExpand.state == .on
+		resolveSymlinks = settingsResolveSymlink.state == .on
+		menuResolveSymlinks.state = resolveSymlinks ? .on : .off
 	}
 	
 	/// Called (once) before `load(:)`
 	override func viewDidLoad() {
 		trash()
-		viewMode = cfgViewMode.selectedViewMode
 		initCollapsible()
 		initExport()
 	}
@@ -68,8 +82,10 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 			rawData = Array(archive)
 			metaInfo.stringValue = archive.metaInfo()
 			fileURL = url
+			if resolveSymlinks {
+				setSymlinkResolver(enabled: true)
+			}
 			changeDataSource(viewMode)
-			enableSymlinkResolver()
 			return true
 		} catch {
 			self.view = errorView
@@ -105,12 +121,6 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		dataSource.performFilter()
 		outline.reloadData()
 		restoreCollapsibleState()
-	}
-	
-	func enableSymlinkResolver() {
-		if symlinkMap == nil, resolveSymlinks {
-			symlinkMap = try? LibArchive(fileURL!).symlinks()
-		}
 	}
 	
 	// MARK: - Key-Value Observer

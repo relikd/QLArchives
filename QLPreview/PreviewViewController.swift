@@ -16,7 +16,7 @@ class PreviewViewController: ArchiveController, QLPreviewingController {
 		super.loadView()
 		// Technically works, but NSOpenPanel popup opens in the background and is hidden by the Quicklook preview.
 		// And `.runModal()` does not allow to write files in selected directory.
-		btnExtractAll.removeFromSuperview()
+		menuExtractAll.isHidden = true
 		
 		// too fiddly in preview. Yes, its somewhat usable in fullscreen but has too many bugs.
 		// e.g.
