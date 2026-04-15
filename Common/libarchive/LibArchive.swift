@@ -37,10 +37,7 @@ class LibArchive: IteratorProtocol, Sequence {
 		archive_read_support_format_all(archive)
 		let r = archive_read_open_filename(archive, path, 102400)
 		if (r != ARCHIVE_OK) {
-			if let reason = archive_error_string(archive) {
-				throw LibArchiveError.generic(String(cString: reason))
-			}
-			throw LibArchiveError.generic("could not load archive")
+			throw descriptiveError(archive, fallback: "could not load archive")
 		}
 		self.ptr_archive = archive
 	}
@@ -63,6 +60,15 @@ class LibArchive: IteratorProtocol, Sequence {
 		}
 	}
 	
+	/// Helper method for optional error message parsing
+	private func descriptiveError(_ archive: OpaquePointer?, fallback: String) -> LibArchiveError {
+		if let reason = archive_error_string(archive) {
+			LibArchiveError.generic(String(cString: reason))
+		} else {
+			LibArchiveError.generic(fallback)
+		}
+	}
+	
 	/// Read next `archive_entry`. Returns `nil` if `EOF`.
 	func next() -> ArchiveEntry? {
 		guard ptr_archive != nil else {
@@ -77,10 +83,11 @@ class LibArchive: IteratorProtocol, Sequence {
 		currentIndex += 1
 		let typ = Filetype(rawValue: archive_entry_filetype(ptr_entry)) ?? .Undefined
 		let size = Int64(archive_entry_size(ptr_entry))
+		let pathname = archive_entry_pathname(ptr_entry)
 		uncompressedSize += size
 		return ArchiveEntry(
 			index: currentIndex - 1,
-			path: String(cString: archive_entry_pathname(ptr_entry)),
+			path: pathname == nil ? "<ERROR>" : String(cString: pathname!),
 			size: typ == .Directory ? -1 : size,
 			perm: Perm(raw: archive_entry_perm(ptr_entry)),
 			filetype: typ,
@@ -163,11 +170,12 @@ class LibArchive: IteratorProtocol, Sequence {
 			archive_write_close(ext)
 			archive_write_free(ext)
 		}
+		var i = 0
 		var entry: OpaquePointer?
 		while true {
 			switch archive_read_next_header(ptr_archive, &entry) {
 			case ARCHIVE_EOF: return
-			case ..<ARCHIVE_WARN: throw LibArchiveError.generic(String(cString: archive_error_string(ptr_archive)))
+			case ..<ARCHIVE_WARN: throw descriptiveError(ptr_archive, fallback: "could not read entry \(i)")
 			default: break
 			}
 			// write
@@ -176,9 +184,10 @@ class LibArchive: IteratorProtocol, Sequence {
 					try _copy_data(ptr_archive, ext)
 				}
 				if archive_write_finish_entry(ext) < ARCHIVE_WARN {
-					throw LibArchiveError.generic(String(cString: archive_error_string(ptr_archive)))
+					throw descriptiveError(ptr_archive, fallback: "could not write entry \(i)")
 				}
 			}
+			i += 1
 		}
 	}
 	
@@ -191,12 +200,12 @@ class LibArchive: IteratorProtocol, Sequence {
 		while true {
 			switch archive_read_data_block(ar, &buff, &size, &offset) {
 			case ARCHIVE_EOF: return true
-			case ..<ARCHIVE_WARN: throw LibArchiveError.generic(String(cString: archive_error_string(ar)))
+			case ..<ARCHIVE_WARN: throw descriptiveError(ar, fallback: "could not read data block")
 			case ..<ARCHIVE_OK: return false
 			default: break
 			}
 			if archive_write_data_block(aw, buff, size, offset) < ARCHIVE_OK {
-				throw LibArchiveError.generic(String(cString: archive_error_string(aw)))
+				throw descriptiveError(aw, fallback: "could not write data block")
 			}
 		}
 	}
@@ -208,7 +217,11 @@ class LibArchive: IteratorProtocol, Sequence {
 		var i: UInt = 0
 		while archive_read_next_header(ptr_archive, &entry) == ARCHIVE_OK {
 			if archive_entry_filetype(entry) == Filetype.SymbolicLink.rawValue {
-				rv[i] = String(cString: archive_entry_symlink(entry))
+				if let link = archive_entry_symlink(entry) {
+					rv[i] = String(cString: link)
+				} else {
+					rv[i] = "<ERROR>"
+				}
 			}
 			i += 1
 		}
