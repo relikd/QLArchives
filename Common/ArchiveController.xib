@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ArchiveController" customModule="QLArchives" customModuleProvider="target">
             <connections>
+                <outlet property="btnSettings" destination="aGG-Aa-0xY" id="a1f-GW-Iye"/>
                 <outlet property="cfgFilter" destination="qMM-TH-HUw" id="MN9-sd-N2k"/>
                 <outlet property="cfgTreeExpand" destination="9tW-e7-MsK" id="1Gm-nC-Bha"/>
                 <outlet property="cfgViewMode" destination="cn7-av-gir" id="mIL-cR-sn1"/>

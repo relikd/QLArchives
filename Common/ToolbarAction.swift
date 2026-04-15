@@ -79,17 +79,15 @@ extension ArchiveController {
 		panel.contentViewController = NSViewController()
 		panel.contentViewController!.view = settingsContainer
 		panel.behavior = .transient
-		panel.show(relativeTo: .zero, of: sender, preferredEdge: .maxY)
+		panel.show(relativeTo: .zero, of: btnSettings, preferredEdge: .maxY)
 	}
 	
 	// MARK: - UI Hotkeys
 	
-	/// allow `Cmd + F` to search
-	override func keyDown(with event: NSEvent) {
-		if event.characters == "f", event.modifierFlags.contains(.command), !searchField.isHidden {
-			searchField.becomeFirstResponder()
-		} else {
-			super.keyDown(with: event)
+	/// Triggered on MainMenu action `Cmd + F` (overwrites `performFindPanelAction:` to allow hotkey if focus is on meta info)
+	@IBAction func focusOnSearchField(_ sender: NSMenuItem) {
+		if !searchField.isHidden {
+			searchField.performSelector(onMainThread: #selector(becomeFirstResponder), with: nil, waitUntilDone: false)
 		}
 	}
 	

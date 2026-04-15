@@ -14,6 +14,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	@IBOutlet var menuResolveSymlinks: NSMenuItem!
 	
 	// Settings popup
+	@IBOutlet var btnSettings: NSButton!
 	@IBOutlet var settingsContainer: NSView!
 	@IBOutlet var settingsDefaultView: NSSegmentedControl!
 	@IBOutlet var settingsAutoExpand: NSSwitch!
