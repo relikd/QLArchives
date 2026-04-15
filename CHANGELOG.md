@@ -5,6 +5,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project does adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.3.0] – 2026-04-15
+Added:
+- Settings popover for default options
+- Export all action
+- Resolve symlinks action
+
+Changed:
+- Truncate middle part instead of leading (long path names)
+- Initial focus on outline view instead of search field
+
+Fixed:
+- Initial enabled state for auto-expand buttons
+- Crash on broken symlinks
+
+
 ## [1.2.0] – 2026-04-14
 Added:
 - Tree View mode
@@ -38,6 +53,7 @@ Fixed:
 Initial release
 
 
+[1.3.0]: https://github.com/relikd/QLArchives/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/relikd/QLArchives/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/relikd/QLArchives/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/relikd/QLArchives/compare/v1.0.0...v1.1.0
