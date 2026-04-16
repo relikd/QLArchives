@@ -34,3 +34,29 @@ extension RangeReplaceableCollection {
 		self.insert(value, at: slice.startIndex)
 	}
 }
+
+// MARK: - Formatter
+
+struct Formatter {
+	private static let fmtDate: DateFormatter = {
+		let x = DateFormatter()
+		x.dateFormat = "yyyy-MM-dd  HH:mm:ss"
+		return x
+	}()
+	
+	/// Human readable date formatter
+	static func date(_ time: time_t) -> String {
+		fmtDate.string(from: Date(timeIntervalSince1970: TimeInterval(time)))
+	}
+	
+	/// Human readable bytes formatter
+	static func bytes(_ size: Int64) -> String {
+		if size < 0 {
+			"--"
+		} else if size < 1024 {
+			"\(size) B"
+		} else {
+			ByteCountFormatter.string(fromByteCount: size, countStyle: .file)
+		}
+	}
+}

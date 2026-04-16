@@ -7,7 +7,6 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	@IBOutlet var cfgFilter: NSSegmentedControl!
 	@IBOutlet var cfgTreeExpand: NSSegmentedControl!
 	@IBOutlet var searchField: NSSearchField!
-	@IBOutlet var metaInfo: NSTextField!
 	
 	// Action button menu
 	@IBOutlet var menuExtractAll: NSMenuItem!
@@ -25,6 +24,10 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	
 	// Main content
 	@IBOutlet var outline: NSOutlineView!
+	
+	// Meta info
+	@IBOutlet var metaInfoLeft: NSTextField!
+	@IBOutlet var metaInfoRight: NSTextField!
 	
 	// Error view
 	@IBOutlet var errorView: NSView!
@@ -61,9 +64,10 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		dataSourceMap = [:]
 		symlinkMap = nil
 		outline.dataSource = nil
-		metaInfo.stringValue = ""
 		expandedNodes.removeAllObjects()
 		progressBar.isHidden = true
+		metaInfoLeft.stringValue = ""
+		metaInfoRight.stringValue = ""
 		// load user settings
 		viewMode = settingsDefaultView.selectedViewMode
 		cfgViewMode.select(viewMode)
@@ -85,7 +89,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		do {
 			let archive = try LibArchive(url)
 			rawData = Array(archive)
-			metaInfo.stringValue = archive.metaInfo()
+			prepareMetaInfo(archive)
 			progressBar.maxValue = Double(archive.count)
 			fileURL = url
 			if resolveSymlinks {
@@ -137,5 +141,27 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	
 	override func viewDidAppear() {
 		searchField.refusesFirstResponder = false
+	}
+	
+	// MARK: - Meta info
+	
+	/// Generate info text for archive meta data (entry count, compression ratio, etc.)
+	///
+	/// Must be called after all entries have been processed.
+	func prepareMetaInfo(_ archive: LibArchive) {
+		let counts = rawData.reduce(into: (0, 0, 0)) {
+			switch $1.filetype {
+			case .Directory: $0.1 += 1
+			case .SymbolicLink:  $0.2 += 1
+			default:  $0.0 += 1
+			}
+		}
+		metaInfoLeft.stringValue = "\(rawData.count) items (dirs: \(counts.1), files: \(counts.0), links: \(counts.2))"
+		metaInfoRight.stringValue = "\(Formatter.bytes(archive.compressedSize)) on disk | \(Formatter.bytes(archive.uncompressedSize)) in archive"
+		if archive.uncompressedSize > 0 {
+			let ratio = 1 - Float(archive.compressedSize) / Float(archive.uncompressedSize)
+			let percent = Int(ratio * 1000) / 10
+			metaInfoRight.stringValue += " | \(percent)%"
+		}
 	}
 }
