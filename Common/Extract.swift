@@ -63,7 +63,7 @@ extension TreeViewController {
 /// Show `NSOpenPanel` and let user select target directory.
 /// Libarchive will extract all content to this directory.
 /// (actually a subdirectory with the name of the archive)
-func showExtractAllDialog(_ archiveFile: URL) {
+func showExtractAllDialog(_ archiveFile: URL, progress: NSProgressIndicator? = nil) {
 	let panel = NSOpenPanel()
 	panel.title = "Extract all"
 	panel.canChooseDirectories = true
@@ -76,14 +76,39 @@ func showExtractAllDialog(_ archiveFile: URL) {
 	guard panel.runModal() == .OK, let outdir = panel.url else {
 		return
 	}
-	do {
-		try extractToPath(archiveFile, outdir)
-	} catch {
-		NSAlert.error(error)
+	// show progress
+	let callback: ProgressCallback?
+	if let progress {
+		progress.doubleValue = 0
+		progress.isHidden = false
+		callback = { step in
+			DispatchQueue.main.async {
+				progress.doubleValue = Double(step)
+			}
+		}
+	} else {
+		callback = nil
+	}
+	// extract on a background thread
+	// (new init instead of `.global`, because latter is not available in QuickLook preview)
+	DispatchQueue(label: "de.relikd.alarchives.extract", qos: .utility).async {
+		do {
+			try extractToPath(archiveFile, outdir, progress: callback)
+		} catch {
+			NSAlert.error(error)
+		}
+		if let progress {
+			DispatchQueue.main.async {
+				progress.doubleValue = progress.maxValue
+			}
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+				progress.isHidden = true
+			}
+		}
 	}
 }
 
-private func extractToPath(_ infile: URL, _ outdir: URL) throws {
+private func extractToPath(_ infile: URL, _ outdir: URL, progress: ProgressCallback? = nil) throws {
 	let fm = FileManager.default
 	// restore previous CWD in any case
 	let prev = fm.currentDirectoryPath
@@ -106,5 +131,5 @@ private func extractToPath(_ infile: URL, _ outdir: URL) throws {
 		throw LibArchiveError.generic("Could not open directory for extract")
 	}
 	// actual export
-	try LibArchive(infile).extractAll()
+	try LibArchive(infile).extractAll(progress: progress)
 }

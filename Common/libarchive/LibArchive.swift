@@ -10,6 +10,8 @@ enum LibArchiveError: Error, LocalizedError {
 	}
 }
 
+typealias ProgressCallback = (UInt) -> Void
+
 class LibArchive: IteratorProtocol, Sequence {
 	typealias Element = ArchiveEntry
 	
@@ -62,7 +64,7 @@ class LibArchive: IteratorProtocol, Sequence {
 	
 	/// Helper method for optional error message parsing
 	private func descriptiveError(_ archive: OpaquePointer?, fallback: String) -> LibArchiveError {
-		if let reason = archive_error_string(archive) {
+		if let archive, let reason = archive_error_string(archive) {
 			LibArchiveError.generic(String(cString: reason))
 		} else {
 			LibArchiveError.generic(fallback)
@@ -160,7 +162,7 @@ class LibArchive: IteratorProtocol, Sequence {
 	}
 	
 	/// Replicate full archive structure on disk
-	func extractAll() throws {
+	func extractAll(progress callback: ProgressCallback? = nil) throws {
 		let flags = ARCHIVE_EXTRACT_TIME | ARCHIVE_EXTRACT_PERM | ARCHIVE_EXTRACT_ACL | ARCHIVE_EXTRACT_FFLAGS
 		let ext = archive_write_disk_new()
 		archive_write_disk_set_options(ext, flags)
@@ -170,7 +172,7 @@ class LibArchive: IteratorProtocol, Sequence {
 			archive_write_close(ext)
 			archive_write_free(ext)
 		}
-		var i = 0
+		var i: UInt = 0
 		var entry: OpaquePointer?
 		while true {
 			switch archive_read_next_header(ptr_archive, &entry) {
@@ -178,6 +180,7 @@ class LibArchive: IteratorProtocol, Sequence {
 			case ..<ARCHIVE_WARN: throw descriptiveError(ptr_archive, fallback: "could not read entry \(i)")
 			default: break
 			}
+			callback?(i)
 			// write
 			if (archive_write_header(ext, entry) == ARCHIVE_OK) {
 				if (archive_entry_size(entry) > 0) {

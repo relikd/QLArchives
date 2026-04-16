@@ -20,6 +20,9 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	@IBOutlet var settingsAutoExpand: NSSwitch!
 	@IBOutlet var settingsResolveSymlink: NSSwitch!
 	
+	// Progress bar
+	@IBOutlet var progressBar: NSProgressIndicator!
+	
 	// Main content
 	@IBOutlet var outline: NSOutlineView!
 	
@@ -60,6 +63,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		outline.dataSource = nil
 		metaInfo.stringValue = ""
 		expandedNodes.removeAllObjects()
+		progressBar.isHidden = true
 		// load user settings
 		viewMode = settingsDefaultView.selectedViewMode
 		cfgViewMode.select(viewMode)
@@ -82,6 +86,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 			let archive = try LibArchive(url)
 			rawData = Array(archive)
 			metaInfo.stringValue = archive.metaInfo()
+			progressBar.maxValue = Double(archive.count)
 			fileURL = url
 			if resolveSymlinks {
 				setSymlinkResolver(enabled: true)

@@ -18,6 +18,7 @@
                 <outlet property="menuResolveSymlinks" destination="4Ch-Hz-wdU" id="r1A-tw-Gcp"/>
                 <outlet property="metaInfo" destination="Svc-Z2-wpl" id="X0m-FD-GPp"/>
                 <outlet property="outline" destination="yTC-jh-ZQv" id="h3N-pO-u1m"/>
+                <outlet property="progressBar" destination="zSo-J5-ltk" id="j43-Fv-74E"/>
                 <outlet property="searchField" destination="aQ2-Ve-Sd1" id="rYN-xp-VXc"/>
                 <outlet property="settingsAutoExpand" destination="wE9-5g-6SV" id="SXF-4T-S0Q"/>
                 <outlet property="settingsContainer" destination="a1g-Jr-GtU" id="keC-vu-yiw"/>
@@ -162,14 +163,20 @@
                                 <real value="3.4028234663852886e+38"/>
                             </customSpacing>
                         </stackView>
+                        <progressIndicator maxValue="100" doubleValue="50" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="zSo-J5-ltk" userLabel="Progress">
+                            <rect key="frame" x="0.0" y="319" width="480" height="10"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="8" id="FuR-qi-pA4"/>
+                            </constraints>
+                        </progressIndicator>
                         <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" findBarPosition="aboveHorizontalRuler" translatesAutoresizingMaskIntoConstraints="NO" id="I4L-hr-trd">
-                            <rect key="frame" x="0.0" y="0.0" width="480" height="328"/>
+                            <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
                             <clipView key="contentView" drawsBackground="NO" id="2qM-FY-fGW">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="328"/>
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" tableStyle="fullWidth" alternatingRowBackgroundColors="YES" autosaveColumns="NO" autosaveName="" rowHeight="16" headerView="cuO-Hd-FLf" indentationPerLevel="13" outlineTableColumn="dCz-gR-l2M" id="yTC-jh-ZQv">
-                                        <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="480" height="292"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <size key="intercellSpacing" width="17" height="4"/>
                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -264,8 +271,10 @@
                     <visibilityPriorities>
                         <integer value="1000"/>
                         <integer value="1000"/>
+                        <integer value="1000"/>
                     </visibilityPriorities>
                     <customSpacing>
+                        <real value="3.4028234663852886e+38"/>
                         <real value="3.4028234663852886e+38"/>
                         <real value="3.4028234663852886e+38"/>
                     </customSpacing>

@@ -44,7 +44,7 @@ extension ArchiveController {
 	/// Triggered on action menu or `Cmd + E`
 	@IBAction func extractAll(_ sender: NSMenuItem) {
 		if let archive_url = self.fileURL {
-			showExtractAllDialog(archive_url)
+			showExtractAllDialog(archive_url, progress: progressBar)
 		}
 	}
 	
