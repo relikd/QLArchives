@@ -149,19 +149,21 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	///
 	/// Must be called after all entries have been processed.
 	func prepareMetaInfo(_ archive: LibArchive) {
-		let counts = rawData.reduce(into: (0, 0, 0)) {
+		// file count
+		let fc = rawData.reduce(into: (0, 0, 0)) {
 			switch $1.filetype {
 			case .Directory: $0.1 += 1
 			case .SymbolicLink:  $0.2 += 1
 			default:  $0.0 += 1
 			}
 		}
-		metaInfoLeft.stringValue = "\(rawData.count) items (dirs: \(counts.1), files: \(counts.0), links: \(counts.2))"
-		metaInfoRight.stringValue = "\(Formatter.bytes(archive.compressedSize)) on disk | \(Formatter.bytes(archive.uncompressedSize)) in archive"
-		if archive.uncompressedSize > 0 {
-			let ratio = 1 - Float(archive.compressedSize) / Float(archive.uncompressedSize)
-			let percent = Int(ratio * 1000) / 10
-			metaInfoRight.stringValue += " | \(percent)%"
+		metaInfoLeft.stringValue = "\(rawData.count) items (dirs: \(fc.1), files: \(fc.0), links: \(fc.2))"
+		// byte size
+		let csz = archive.compressedSize
+		let usz = archive.uncompressedSize
+		metaInfoRight.stringValue = "\(Formatter.bytes(csz)) on disk | \(Formatter.bytes(usz)) in archive"
+		if usz > 0 {
+			metaInfoRight.stringValue += " | \(csz * 100 / usz)%"
 		}
 	}
 }
