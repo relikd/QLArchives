@@ -14,10 +14,6 @@ class PreviewViewController: ArchiveController, QLPreviewingController {
 	
 	override func loadView() {
 		super.loadView()
-		// Technically works, but NSOpenPanel popup opens in the background and is hidden by the Quicklook preview.
-		// And `.runModal()` does not allow to write files in selected directory.
-		menuExtractAll.isHidden = true
-		
 		// too fiddly in preview. Yes, its somewhat usable in fullscreen but has too many bugs.
 		// e.g.
 		// - First click inside of search field will place the curser but wont accept input. You have to tab-into the field instead.

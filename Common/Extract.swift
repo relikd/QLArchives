@@ -73,16 +73,14 @@ func showExtractAllDialog(_ archiveFile: URL) {
 	panel.allowsMultipleSelection = false
 	panel.directoryURL = archiveFile.deletingLastPathComponent()
 	panel.prompt = "Extract"
-	panel.begin {
-		if $0 == .OK {
-			do {
-				try extractToPath(archiveFile, panel.url!)
-			} catch {
-				NSAlert.error(error)
-			}
-		}
+	guard panel.runModal() == .OK, let outdir = panel.url else {
+		return
 	}
-	// TODO: I'd like to use `runModal()` but that puts Sandbox limitations on subpaths
+	do {
+		try extractToPath(archiveFile, outdir)
+	} catch {
+		NSAlert.error(error)
+	}
 }
 
 private func extractToPath(_ infile: URL, _ outdir: URL) throws {
