@@ -41,16 +41,19 @@ extension ArchiveController {
 	
 	// MARK: - Action Menu
 	
-	/// Triggered on action menu or `Cmd + E`
-	@IBAction func extractAll(_ sender: NSButton) {
+	/// Hotkey `Cmd + E`.
+	/// Triggered on toolbar button (`NSButton`), or main menu item (`NSMenuItem`).
+	@IBAction func extractAll(_ sender: Any) {
 		if let archive_url = self.fileURL {
 			showExtractAllDialog(archive_url, progress: progressBar)
 		}
 	}
 	
-	/// Triggered on action menu as well as default settings toggle.
+	/// Hotkey `Cmd + Y`.
+	/// Triggered on toolbar button (`NSButton`), main menu item (`NSMenuItem`), or default settings popover (`NSSwitch`).
 	@IBAction func toggleShowSymlinks(_ sender: Any) {
 		if let state = (sender as? NSSwitch)?.state {
+			// contrary to the else-branch, setting a default config overwrites the current state
 			setSymlinkResolver(enabled: state == .on)
 		} else {
 			setSymlinkResolver(enabled: !resolveSymlinks)
@@ -84,7 +87,8 @@ extension ArchiveController {
 	
 	// MARK: - UI Hotkeys
 	
-	/// Triggered on MainMenu action `Cmd + F` (overwrites `performFindPanelAction:` to allow hotkey if focus is on meta info)
+	/// Hotkey `Cmd + F`.
+	/// Triggered on MainMenu action (overwrites `performFindPanelAction:` to allow hotkey if focus is on meta info)
 	@IBAction func focusOnSearchField(_ sender: NSMenuItem) {
 		if !searchField.isHidden {
 			searchField.performSelector(onMainThread: #selector(becomeFirstResponder), with: nil, waitUntilDone: false)

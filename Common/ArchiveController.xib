@@ -78,7 +78,7 @@
                                         <action selector="toggleFilter:" target="-2" id="wyL-d9-c3b"/>
                                     </connections>
                                 </segmentedControl>
-                                <searchField toolTip="Find entries (⌘F)" focusRingType="none" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1" userLabel="Search">
+                                <searchField toolTip="Find entries" focusRingType="none" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1" userLabel="Search">
                                     <rect key="frame" x="208" y="5" width="126" height="22"/>
                                     <constraints>
                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="26" id="BgJ-zN-Mx8"/>
@@ -103,7 +103,7 @@
                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <button toolTip="Resolve symlinks (⌘Y)" translatesAutoresizingMaskIntoConstraints="NO" id="hPX-se-trQ">
+                                <button toolTip="Resolve symlinks" translatesAutoresizingMaskIntoConstraints="NO" id="hPX-se-trQ">
                                     <rect key="frame" x="371" y="9" width="26" height="14"/>
                                     <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="link-show" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="6Lw-2G-Txb">
                                         <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
@@ -115,7 +115,7 @@
                                         <action selector="toggleShowSymlinks:" target="-2" id="sJi-ZP-wSD"/>
                                     </connections>
                                 </button>
-                                <button toolTip="Extract all (⌘E)" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Mb5-Zr-fYb">
+                                <button toolTip="Extract all" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Mb5-Zr-fYb">
                                     <rect key="frame" x="398" y="-1" width="44" height="32"/>
                                     <buttonCell key="cell" type="push" bezelStyle="rounded" image="extract" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="03d-E1-CHw">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -127,7 +127,7 @@
                                         <action selector="extractAll:" target="-2" id="ynL-R5-jZZ"/>
                                     </connections>
                                 </button>
-                                <button toolTip="Settings (⌘,)" horizontalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="aGG-Aa-0xY" userLabel="Settings">
+                                <button toolTip="Settings" horizontalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="aGG-Aa-0xY" userLabel="Settings">
                                     <rect key="frame" x="443" y="9" width="21" height="14"/>
                                     <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="NSSmartBadgeTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="xea-zG-xbf">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
