@@ -42,14 +42,14 @@ extension ArchiveController {
 	// MARK: - Action Menu
 	
 	/// Triggered on action menu or `Cmd + E`
-	@IBAction func extractAll(_ sender: NSMenuItem) {
+	@IBAction func extractAll(_ sender: NSButton) {
 		if let archive_url = self.fileURL {
 			showExtractAllDialog(archive_url, progress: progressBar)
 		}
 	}
 	
 	/// Triggered on action menu as well as default settings toggle.
-	@IBAction func toggleSymlinkResolver(_ sender: Any) {
+	@IBAction func toggleShowSymlinks(_ sender: Any) {
 		if let state = (sender as? NSSwitch)?.state {
 			setSymlinkResolver(enabled: state == .on)
 		} else {
@@ -61,7 +61,7 @@ extension ArchiveController {
 	/// Triggered on user action and on `load(:)`.
 	func setSymlinkResolver(enabled: Bool) {
 		resolveSymlinks = enabled
-		menuResolveSymlinks.state = enabled ? .on : .off
+		btnShowSymlinks.state = enabled ? .on : .off
 		if symlinkMap == nil, enabled {
 			do {
 				symlinkMap = try LibArchive(fileURL!).symlinks()

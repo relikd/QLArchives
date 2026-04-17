@@ -9,13 +9,12 @@
         <customObject id="-2" userLabel="File's Owner" customClass="ArchiveController" customModule="QLArchives" customModuleProvider="target">
             <connections>
                 <outlet property="btnSettings" destination="aGG-Aa-0xY" id="a1f-GW-Iye"/>
+                <outlet property="btnShowSymlinks" destination="hPX-se-trQ" id="RdE-EH-B00"/>
                 <outlet property="cfgFilter" destination="qMM-TH-HUw" id="MN9-sd-N2k"/>
                 <outlet property="cfgTreeExpand" destination="9tW-e7-MsK" id="1Gm-nC-Bha"/>
                 <outlet property="cfgViewMode" destination="cn7-av-gir" id="mIL-cR-sn1"/>
                 <outlet property="errorText" destination="TSv-oF-fr6" id="0o7-rE-eRx"/>
                 <outlet property="errorView" destination="xfI-j0-rMV" id="Rq9-AO-drn"/>
-                <outlet property="menuExtractAll" destination="v22-xj-OGN" id="iLw-4Y-bva"/>
-                <outlet property="menuResolveSymlinks" destination="4Ch-Hz-wdU" id="r1A-tw-Gcp"/>
                 <outlet property="metaInfoLeft" destination="aUD-Ei-b9G" id="MZ2-oS-131"/>
                 <outlet property="metaInfoRight" destination="NWb-Yq-UGb" id="7mT-Fo-edm"/>
                 <outlet property="outline" destination="yTC-jh-ZQv" id="h3N-pO-u1m"/>
@@ -80,7 +79,7 @@
                                     </connections>
                                 </segmentedControl>
                                 <searchField toolTip="Find entries (⌘F)" focusRingType="none" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1" userLabel="Search">
-                                    <rect key="frame" x="208" y="5" width="148" height="22"/>
+                                    <rect key="frame" x="208" y="5" width="126" height="22"/>
                                     <constraints>
                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="26" id="BgJ-zN-Mx8"/>
                                     </constraints>
@@ -94,37 +93,40 @@
                                     </connections>
                                 </searchField>
                                 <textField focusRingType="none" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="btI-pc-4n1" userLabel="Flexible Space">
-                                    <rect key="frame" x="362" y="8" width="25" height="16"/>
+                                    <rect key="frame" x="340" y="8" width="25" height="16"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="21" placeholder="YES" id="f3W-k1-DFI"/>
+                                    </constraints>
                                     <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" id="zmM-qt-Gsl">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <popUpButton toolTip="Action" horizontalHuggingPriority="1000" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Svv-db-4fz" userLabel="Action Button">
-                                    <rect key="frame" x="390" y="2" width="49" height="25"/>
-                                    <popUpButtonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" altersStateOfSelectedItem="NO" id="Ty9-hL-cg7">
+                                <button toolTip="Resolve symlinks (⌘Y)" translatesAutoresizingMaskIntoConstraints="NO" id="hPX-se-trQ">
+                                    <rect key="frame" x="371" y="9" width="26" height="14"/>
+                                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="link-show" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="6Lw-2G-Txb">
+                                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                        <string key="keyEquivalent">y</string>
+                                        <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="toggleShowSymlinks:" target="-2" id="sJi-ZP-wSD"/>
+                                    </connections>
+                                </button>
+                                <button toolTip="Extract all (⌘E)" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Mb5-Zr-fYb">
+                                    <rect key="frame" x="398" y="-1" width="44" height="32"/>
+                                    <buttonCell key="cell" type="push" bezelStyle="rounded" image="extract" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="03d-E1-CHw">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                        <font key="font" metaFont="message"/>
-                                        <menu key="menu" id="wcd-jC-MYW">
-                                            <items>
-                                                <menuItem image="action" hidden="YES" id="QOQ-0m-0I5">
-                                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                                </menuItem>
-                                                <menuItem title="Extract all" keyEquivalent="e" id="v22-xj-OGN">
-                                                    <connections>
-                                                        <action selector="extractAll:" target="-2" id="fCJ-i2-EpX"/>
-                                                    </connections>
-                                                </menuItem>
-                                                <menuItem title="Resolve symlinks" keyEquivalent="y" id="4Ch-Hz-wdU">
-                                                    <connections>
-                                                        <action selector="toggleSymlinkResolver:" target="-2" id="Yiu-W9-4CC"/>
-                                                    </connections>
-                                                </menuItem>
-                                            </items>
-                                        </menu>
-                                    </popUpButtonCell>
-                                </popUpButton>
+                                        <font key="font" metaFont="system"/>
+                                        <string key="keyEquivalent">e</string>
+                                        <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="extractAll:" target="-2" id="ynL-R5-jZZ"/>
+                                    </connections>
+                                </button>
                                 <button toolTip="Settings (⌘,)" horizontalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="aGG-Aa-0xY" userLabel="Settings">
                                     <rect key="frame" x="443" y="9" width="21" height="14"/>
                                     <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="NSSmartBadgeTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="xea-zG-xbf">
@@ -151,9 +153,11 @@
                                 <real value="1000"/>
                                 <real value="1"/>
                                 <integer value="1000"/>
+                                <integer value="1000"/>
                                 <real value="1000"/>
                             </visibilityPriorities>
                             <customSpacing>
+                                <real value="3.4028234663852886e+38"/>
                                 <real value="3.4028234663852886e+38"/>
                                 <real value="3.4028234663852886e+38"/>
                                 <real value="3.4028234663852886e+38"/>
@@ -436,7 +440,7 @@
                             <switch key="contentView" horizontalHuggingPriority="750" verticalHuggingPriority="750" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="TMh-ZQ-zSf">
                                 <rect key="frame" x="117" y="-1" width="42" height="25"/>
                                 <connections>
-                                    <action selector="toggleSymlinkResolver:" target="-2" id="aN4-WO-rYQ"/>
+                                    <action selector="toggleShowSymlinks:" target="-2" id="aN4-WO-rYQ"/>
                                     <binding destination="Maf-Wa-Yhe" name="value" keyPath="values.resolveSymlinks" id="AQ3-wI-LQ5"/>
                                 </connections>
                             </switch>
@@ -460,9 +464,10 @@
         <image name="NSSmartBadgeTemplate" width="14" height="14"/>
         <image name="NSTouchBarEnterFullScreenTemplate" width="20" height="19"/>
         <image name="NSTouchBarExitFullScreenTemplate" width="20" height="20"/>
-        <image name="action" width="14" height="14"/>
         <image name="dir" width="14" height="14"/>
+        <image name="extract" width="14" height="14"/>
         <image name="file" width="11" height="14"/>
         <image name="link" width="14" height="14"/>
+        <image name="link-show" width="26" height="14"/>
     </resources>
 </document>

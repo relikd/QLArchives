@@ -7,10 +7,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 	@IBOutlet var cfgFilter: NSSegmentedControl!
 	@IBOutlet var cfgTreeExpand: NSSegmentedControl!
 	@IBOutlet var searchField: NSSearchField!
-	
-	// Action button menu
-	@IBOutlet var menuExtractAll: NSMenuItem!
-	@IBOutlet var menuResolveSymlinks: NSMenuItem!
+	@IBOutlet var btnShowSymlinks: NSButton!
 	
 	// Settings popup
 	@IBOutlet var btnSettings: NSButton!
@@ -73,7 +70,7 @@ class ArchiveController: NSViewController, NSOutlineViewDelegate {
 		cfgViewMode.select(viewMode)
 		autoExpandOnce = settingsAutoExpand.state == .on
 		resolveSymlinks = settingsResolveSymlink.state == .on
-		menuResolveSymlinks.state = resolveSymlinks ? .on : .off
+		btnShowSymlinks.state = resolveSymlinks ? .on : .off
 	}
 	
 	/// Called (once) before `load(:)`
