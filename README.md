@@ -32,22 +32,22 @@ Features
 - Blazing fast archive listings (native UI)
 - No (external) dependencies
 - macOS 10.15+
-- Small app size (2 MB)
+- Small app size (2.5 MB)
 - Customize sort order
 - Filter by filetype
 - Resolve symlinks
+- Extract all files
 - Archive support for: `.7z`, `.apk`, `.cab`, `.cdr`, `.cpio`, `.deb`, `.epub`, `.ipsw`, `.iso`, `.jar`, `.lha`, `.pkg`, `.rar`, `.rpm`, `.tar`, `.tar.bz2`, `.tar.gz`, `.tar.lz`, `.tar.xz`, `.tbz`, `.tbz2`, `.tgz`, `.tlz`, `.txz`, `.war`, `.xar`, `.xip`, `.zip`, `.zipx`
 
 ### Within the companion app
 - Search for files
 - Extract individual files (drag & drop)
-- Extract all files (action button)
 
-![extract individual files with drag n drop](./resources/screen-export.png)
+![extract individual files with drag n drop](./resources/screen-extract.png)
 
 ### Default settings
 
-![settings config options](./resources/screen-settings.png)
+![default settings options](./resources/screen-settings.png)
 
 __Note:__ QuickLook preview and companion app use separate settings.
 You may have to configure both.

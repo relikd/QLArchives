@@ -5,10 +5,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project does adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [1.4.0] - Unreleased
+## [1.4.0] - 2026-04-18
 Added:
 - Progress bar for extract
-- "Extract all" from within QuickLook preview
+- "Extract All" from within QuickLook preview
+- Main menu entries for all action items (incl. hotkeys)
+
+Changed:
+- Meta information at the window bottom + more explanatory
+- Compression ratio percentage inverted (now: 0% => best)
+- Distinct action buttons for extract and symlink resolve
+
+Fixed:
+- Extract on background thread, keeps UI responsive
+- Pixel-perfect icons
 
 
 ## [1.3.0] – 2026-04-15
