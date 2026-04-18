@@ -251,7 +251,7 @@
                                     </connections>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Resolve symlinks" tag="304" keyEquivalent="y" id="4Ru-p6-Q3v">
+                            <menuItem title="Resolve Symlinks" tag="304" keyEquivalent="y" id="4Ru-p6-Q3v">
                                 <connections>
                                     <action selector="toggleShowSymlinks:" target="-1" id="Z5N-pR-xLO"/>
                                 </connections>

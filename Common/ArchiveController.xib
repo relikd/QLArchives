@@ -43,8 +43,8 @@
                                     <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="mEt-Bn-sgs">
                                         <font key="font" metaFont="system"/>
                                         <segments>
-                                            <segment toolTip="List view" image="NSListViewTemplate" selected="YES"/>
-                                            <segment toolTip="Tree view" image="NSPathTemplate" tag="1"/>
+                                            <segment toolTip="List View" image="NSListViewTemplate" selected="YES"/>
+                                            <segment toolTip="Tree View" image="NSPathTemplate" tag="1"/>
                                         </segments>
                                     </segmentedCell>
                                     <connections>
@@ -56,8 +56,8 @@
                                     <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="momentary" id="y2M-Je-byg">
                                         <font key="font" metaFont="system"/>
                                         <segments>
-                                            <segment toolTip="Expand all" image="NSTouchBarEnterFullScreenTemplate"/>
-                                            <segment toolTip="Collapse all" image="NSTouchBarExitFullScreenTemplate" tag="1"/>
+                                            <segment toolTip="Expand All" image="NSTouchBarEnterFullScreenTemplate"/>
+                                            <segment toolTip="Collapse All" image="NSTouchBarExitFullScreenTemplate" tag="1"/>
                                         </segments>
                                     </segmentedCell>
                                     <connections>
@@ -69,16 +69,16 @@
                                     <segmentedCell key="cell" alignment="left" style="rounded" trackingMode="selectAny" id="el0-2b-9q6">
                                         <font key="font" metaFont="system"/>
                                         <segments>
-                                            <segment toolTip="Show directories" image="dir" tag="1"/>
-                                            <segment toolTip="Show files" image="file" tag="2"/>
-                                            <segment toolTip="Show symlinks" image="link" tag="4"/>
+                                            <segment toolTip="Show Directories" image="dir" tag="1"/>
+                                            <segment toolTip="Show Files" image="file" tag="2"/>
+                                            <segment toolTip="Show Symlinks" image="link" tag="4"/>
                                         </segments>
                                     </segmentedCell>
                                     <connections>
                                         <action selector="toggleFiletypeFilter:" target="-2" id="wyL-d9-c3b"/>
                                     </connections>
                                 </segmentedControl>
-                                <searchField toolTip="Find entries" focusRingType="none" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1" userLabel="Search">
+                                <searchField toolTip="Find Entries" focusRingType="none" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1" userLabel="Search">
                                     <rect key="frame" x="208" y="5" width="126" height="22"/>
                                     <constraints>
                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="26" id="BgJ-zN-Mx8"/>
@@ -103,7 +103,7 @@
                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <button toolTip="Resolve symlinks" translatesAutoresizingMaskIntoConstraints="NO" id="hPX-se-trQ">
+                                <button toolTip="Resolve Symlinks" translatesAutoresizingMaskIntoConstraints="NO" id="hPX-se-trQ">
                                     <rect key="frame" x="371" y="9" width="26" height="14"/>
                                     <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="link-show" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="6Lw-2G-Txb">
                                         <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
@@ -113,7 +113,7 @@
                                         <action selector="toggleShowSymlinks:" target="-2" id="sJi-ZP-wSD"/>
                                     </connections>
                                 </button>
-                                <button toolTip="Extract all" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Mb5-Zr-fYb">
+                                <button toolTip="Extract All" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Mb5-Zr-fYb">
                                     <rect key="frame" x="398" y="-1" width="44" height="32"/>
                                     <buttonCell key="cell" type="push" bezelStyle="rounded" image="extract" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="03d-E1-CHw">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
