@@ -9,7 +9,7 @@ extension ArchiveController {
 	
 	/// Triggers on toolbar buttons (`NSSegmentedControl`), or main menu item (`NSMenuItem`).
 	@IBAction func changeViewMode(_ sender: Any) {
-		if let mi = sender as? NSMenuItem {
+		if sender is NSMenuItem {
 			cfgViewMode.select(viewMode == .list ? .tree : .list)
 		}
 		viewMode = cfgViewMode.selectedViewMode

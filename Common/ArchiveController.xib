@@ -108,8 +108,6 @@
                                     <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="link-show" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="6Lw-2G-Txb">
                                         <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
-                                        <string key="keyEquivalent">y</string>
-                                        <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                     </buttonCell>
                                     <connections>
                                         <action selector="toggleShowSymlinks:" target="-2" id="sJi-ZP-wSD"/>
@@ -120,8 +118,6 @@
                                     <buttonCell key="cell" type="push" bezelStyle="rounded" image="extract" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="03d-E1-CHw">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
-                                        <string key="keyEquivalent">e</string>
-                                        <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                     </buttonCell>
                                     <connections>
                                         <action selector="extractAll:" target="-2" id="ynL-R5-jZZ"/>
@@ -132,8 +128,6 @@
                                     <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="NSSmartBadgeTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="xea-zG-xbf">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
-                                        <string key="keyEquivalent">,</string>
-                                        <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                     </buttonCell>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="21" id="lnh-aN-UCm"/>
