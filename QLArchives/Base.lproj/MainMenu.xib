@@ -189,8 +189,7 @@
                                     <action selector="focusOnSearchField:" target="-1" id="7XN-nu-5yl"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Toggle View Mode" id="cS4-w6-feY">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Toggle View Mode" keyEquivalent="1" id="cS4-w6-feY">
                                 <connections>
                                     <action selector="changeViewMode:" target="-1" id="g2n-EC-Zgp"/>
                                 </connections>
@@ -199,20 +198,17 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="List View Filter" autoenablesItems="NO" identifier="list-view-menu" id="ZBi-WW-AoR">
                                     <items>
-                                        <menuItem title="Show Directories" tag="1" id="tgJ-cz-4jN">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Show Directories" tag="1" keyEquivalent="2" id="tgJ-cz-4jN">
                                             <connections>
                                                 <action selector="toggleFiletypeFilter:" target="-1" id="Lqd-ag-OvS"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Show Files" tag="2" id="7P8-np-GMv">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Show Files" tag="2" keyEquivalent="3" id="7P8-np-GMv">
                                             <connections>
                                                 <action selector="toggleFiletypeFilter:" target="-1" id="4sS-xw-LEs"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Show Symlinks" tag="4" id="zMP-2i-Wem">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Show Symlinks" tag="4" keyEquivalent="4" id="zMP-2i-Wem">
                                             <connections>
                                                 <action selector="toggleFiletypeFilter:" target="-1" id="rFp-Bm-26e"/>
                                             </connections>
@@ -227,14 +223,12 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Tree View" autoenablesItems="NO" identifier="tree-view-menu" id="dFY-FN-PDC">
                                     <items>
-                                        <menuItem title="Expand All Nodes" id="cTS-0E-wko">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Expand All Nodes" keyEquivalent="" id="cTS-0E-wko">
                                             <connections>
                                                 <action selector="performTreeExpand:" target="-1" id="kAB-e3-Txt"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Collapse All Nodes" tag="1" id="hOt-b5-JNi">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Collapse All Nodes" tag="1" keyEquivalent="" id="hOt-b5-JNi">
                                             <connections>
                                                 <action selector="performTreeExpand:" target="-1" id="051-Xw-IKe"/>
                                             </connections>
