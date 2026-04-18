@@ -7,15 +7,25 @@ private var debounceTimer: Timer?
 extension ArchiveController {
 	// MARK: - Toolbar Actions
 	
-	/// Triggers when user changes view mode
-	@IBAction func changeViewMode(_ sender: NSSegmentedControl) {
-		viewMode = sender.selectedViewMode
+	/// Triggers on toolbar buttons (`NSSegmentedControl`), or main menu item (`NSMenuItem`).
+	@IBAction func changeViewMode(_ sender: Any) {
+		if let mi = sender as? NSMenuItem {
+			cfgViewMode.select(viewMode == .list ? .tree : .list)
+		}
+		viewMode = cfgViewMode.selectedViewMode
 		changeDataSource(viewMode)
 	}
 	
-	/// Triggers when user clicks expand / collapse button in tree view mode
-	@IBAction func performTreeExpand(_ sender: NSSegmentedControl) {
-		switch sender.expandAction {
+	/// Expand / collapse buttons.
+	/// Triggers on toolbar buttons (`NSSegmentedControl`), or main menu item (`NSMenuItem`).
+	@IBAction func performTreeExpand(_ sender: Any) {
+		let action: ExpandAction
+		switch sender {
+		case let mi as NSMenuItem: action = .init(rawValue: mi.tag)!
+		case let seg as NSSegmentedControl: action = .init(rawValue: seg.selectedSegment)!
+		default: return
+		}
+		switch action {
 		case .expand: outline.expandItem(nil, expandChildren: true)
 		case .collapse: outline.collapseItem(nil, collapseChildren: true)
 		}
@@ -23,13 +33,16 @@ extension ArchiveController {
 		outline.needsDisplay = true
 	}
 	
-	/// Called when user clicks on any of the type toggles.
-	@IBAction func toggleFilter(_ sender: NSSegmentedControl) {
+	/// Triggers on toolbar buttons (`NSSegmentedControl`), or main menu item (`NSMenuItem`).
+	@IBAction func toggleFiletypeFilter(_ sender: Any) {
+		if let mi = sender as? NSMenuItem {
+			cfgFilter.multiSelectToggle(mi.tag)
+		}
 		dataSource.filetypeFilter = cfgFilter.selectedTypeFilter
 		performFilterAndReload()
 	}
 	
-	/// Called whenever user starts typing in the search field.
+	/// Triggers whenever user starts typing in the search field.
 	@IBAction func didSearch(_ sender: NSSearchField) {
 		let debounce = sender.stringValue.isEmpty ? 0.02 : 0.2
 		debounceTimer?.invalidate()
@@ -39,10 +52,8 @@ extension ArchiveController {
 		}
 	}
 	
-	// MARK: - Action Menu
-	
 	/// Hotkey `Cmd + E`.
-	/// Triggered on toolbar button (`NSButton`), or main menu item (`NSMenuItem`).
+	/// Triggers on toolbar button (`NSButton`), or main menu item (`NSMenuItem`).
 	@IBAction func extractAll(_ sender: Any) {
 		if let archive_url = self.fileURL {
 			showExtractAllDialog(archive_url, progress: progressBar)
@@ -50,7 +61,7 @@ extension ArchiveController {
 	}
 	
 	/// Hotkey `Cmd + Y`.
-	/// Triggered on toolbar button (`NSButton`), main menu item (`NSMenuItem`), or default settings popover (`NSSwitch`).
+	/// Triggers on toolbar button (`NSButton`), main menu item (`NSMenuItem`), or default settings popover (`NSSwitch`).
 	@IBAction func toggleShowSymlinks(_ sender: Any) {
 		if let state = (sender as? NSSwitch)?.state {
 			// contrary to the else-branch, setting a default config overwrites the current state
@@ -61,7 +72,7 @@ extension ArchiveController {
 		outline.reloadData()
 	}
 	
-	/// Triggered on user action and on `load(:)`.
+	/// Triggers on user action (see above) and on `load(:)`.
 	func setSymlinkResolver(enabled: Bool) {
 		resolveSymlinks = enabled
 		btnShowSymlinks.state = enabled ? .on : .off
@@ -88,14 +99,14 @@ extension ArchiveController {
 	// MARK: - UI Hotkeys
 	
 	/// Hotkey `Cmd + F`.
-	/// Triggered on MainMenu action (overwrites `performFindPanelAction:` to allow hotkey if focus is on meta info)
+	/// Triggers on main menu action (overwrites `performFindPanelAction:` to allow hotkey if focus is on meta info)
 	@IBAction func focusOnSearchField(_ sender: NSMenuItem) {
 		if !searchField.isHidden {
 			searchField.performSelector(onMainThread: #selector(becomeFirstResponder), with: nil, waitUntilDone: false)
 		}
 	}
 	
-	/// allow `ESC` inside search field / any NSView
+	/// Allow `ESC` inside search field (or any other NSView)
 	override func cancelOperation(_ sender: Any?) {
 		self.view.window?.performSelector(onMainThread: #selector(NSWindow.makeFirstResponder(_:)), with: self.outline, waitUntilDone: false)
 	}

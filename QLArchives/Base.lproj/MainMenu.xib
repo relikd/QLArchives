@@ -68,7 +68,7 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="File" id="bib-Uj-vzu">
                         <items>
-                            <menuItem title="Extract all…" keyEquivalent="e" id="4rr-OU-MEh">
+                            <menuItem title="Extract All…" keyEquivalent="e" id="4rr-OU-MEh">
                                 <connections>
                                     <action selector="extractAll:" target="-1" id="F9U-SE-AhJ"/>
                                 </connections>
@@ -188,14 +188,70 @@
                 </menuItem>
                 <menuItem title="View" id="H8h-7b-M4v">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="View" id="HyV-fh-RgO">
+                    <menu key="submenu" title="View" identifier="view-menu" id="HyV-fh-RgO">
                         <items>
                             <menuItem title="Search / Find…" keyEquivalent="f" id="Xz5-n4-O0W">
                                 <connections>
                                     <action selector="focusOnSearchField:" target="-1" id="7XN-nu-5yl"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Toggle &quot;Resolve symlinks&quot;" keyEquivalent="y" id="4Ru-p6-Q3v">
+                            <menuItem title="Toggle View Mode" id="cS4-w6-feY">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeViewMode:" target="-1" id="g2n-EC-Zgp"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="List View Filter" id="deO-eA-brd">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="List View Filter" autoenablesItems="NO" identifier="list-view-menu" id="ZBi-WW-AoR">
+                                    <items>
+                                        <menuItem title="Show Directories" tag="1" id="tgJ-cz-4jN">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleFiletypeFilter:" target="-1" id="Lqd-ag-OvS"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Show Files" tag="2" id="7P8-np-GMv">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleFiletypeFilter:" target="-1" id="4sS-xw-LEs"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Show Symlinks" tag="4" id="zMP-2i-Wem">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleFiletypeFilter:" target="-1" id="rFp-Bm-26e"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                    <connections>
+                                        <outlet property="delegate" destination="Voe-Tx-rLC" id="yRE-dU-Jdj"/>
+                                    </connections>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Tree View" id="C3a-nF-e5d">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Tree View" autoenablesItems="NO" identifier="tree-view-menu" id="dFY-FN-PDC">
+                                    <items>
+                                        <menuItem title="Expand All Nodes" id="cTS-0E-wko">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="performTreeExpand:" target="-1" id="kAB-e3-Txt"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Collapse All Nodes" tag="1" id="hOt-b5-JNi">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="performTreeExpand:" target="-1" id="051-Xw-IKe"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                    <connections>
+                                        <outlet property="delegate" destination="Voe-Tx-rLC" id="6oP-0i-ufb"/>
+                                    </connections>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Resolve symlinks" tag="304" keyEquivalent="y" id="4Ru-p6-Q3v">
                                 <connections>
                                     <action selector="toggleShowSymlinks:" target="-1" id="Z5N-pR-xLO"/>
                                 </connections>
@@ -227,6 +283,9 @@
                                 </connections>
                             </menuItem>
                         </items>
+                        <connections>
+                            <outlet property="delegate" destination="Voe-Tx-rLC" id="QgU-s0-xNn"/>
+                        </connections>
                     </menu>
                 </menuItem>
                 <menuItem title="Window" id="aUF-d1-5bR">
@@ -270,5 +329,6 @@
             </items>
             <point key="canvasLocation" x="140" y="154"/>
         </menu>
+        <userDefaultsController representsSharedInstance="YES" id="QrM-Ff-2yP"/>
     </objects>
 </document>

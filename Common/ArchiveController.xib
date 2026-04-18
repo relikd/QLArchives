@@ -75,7 +75,7 @@
                                         </segments>
                                     </segmentedCell>
                                     <connections>
-                                        <action selector="toggleFilter:" target="-2" id="wyL-d9-c3b"/>
+                                        <action selector="toggleFiletypeFilter:" target="-2" id="wyL-d9-c3b"/>
                                     </connections>
                                 </segmentedControl>
                                 <searchField toolTip="Find entries" focusRingType="none" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-Ve-Sd1" userLabel="Search">

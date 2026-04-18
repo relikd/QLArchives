@@ -20,14 +20,12 @@ extension NSSegmentedControl {
 
 // MARK: - Expand Nodes
 
-enum ExpandAction {
-	case expand, collapse
+enum ExpandAction: Int {
+	case expand = 0
+	case collapse = 1
 }
 
 extension NSSegmentedControl {
-	var expandAction: ExpandAction {
-		self.selectedSegment == 1 ? .collapse : .expand
-	}
 	func set(_ action: ExpandAction, enabled: Bool) {
 		setEnabled(enabled, forSegment: action == .collapse ? 1 : 0)
 	}
@@ -65,5 +63,14 @@ extension NSSegmentedControl {
 		FiletypeFilter(rawValue: (0..<self.segmentCount).reduce(0) {
 			$0 + (self.isSelected(forSegment: $1) ? self.tag(forSegment: $1) : 0)
 		})
+	}
+	/// Iterate over all segments and find the one with matching tag. Then toggle its value.
+	func multiSelectToggle(_ tag: Int) {
+		for i in 0..<self.segmentCount {
+			if self.tag(forSegment: i) == tag {
+				self.setSelected(!self.isSelected(forSegment: i), forSegment: i)
+				return
+			}
+		}
 	}
 }
