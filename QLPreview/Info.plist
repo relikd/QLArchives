@@ -45,6 +45,8 @@
 				<string>org.tukaani.tar-xz-archive</string>
 				<string>dyn.ah62d4rv4ge81k8d4</string>
 				<string>com.sun.web-application-archive</string>
+				<string>org.python.wheel</string>
+				<string>dyn.ah62d4rv4ge81s4dq</string>
 				<string>com.apple.xar-archive</string>
 				<string>com.apple.xip-archive</string>
 				<string>public.zip-archive</string>

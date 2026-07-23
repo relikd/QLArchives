@@ -37,7 +37,7 @@ Features
 - Filter by filetype
 - Resolve symlinks
 - Extract all files
-- Archive support for: `.7z`, `.apk`, `.cab`, `.cdr`, `.cpio`, `.deb`, `.epub`, `.ipsw`, `.iso`, `.jar`, `.lha`, `.pkg`, `.rar`, `.rpm`, `.tar`, `.tar.bz2`, `.tar.gz`, `.tar.lz`, `.tar.xz`, `.tbz`, `.tbz2`, `.tgz`, `.tlz`, `.txz`, `.war`, `.xar`, `.xip`, `.zip`, `.zipx`
+- Archive support for: `.7z`, `.apk`, `.cab`, `.cdr`, `.cpio`, `.deb`, `.epub`, `.ipsw`, `.iso`, `.jar`, `.lha`, `.pkg`, `.rar`, `.rpm`, `.tar`, `.tar.bz2`, `.tar.gz`, `.tar.lz`, `.tar.xz`, `.tbz`, `.tbz2`, `.tgz`, `.tlz`, `.txz`, `.war`, `.whl`, `.xar`, `.xip`, `.zip`, `.zipx`
 
 ### Within the companion app
 - Search for files
